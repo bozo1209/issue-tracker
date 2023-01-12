@@ -13,7 +13,7 @@
 		<version>3.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.bozo</groupId>
 	<artifactId>issue-tracker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>issue-tracker</name>
