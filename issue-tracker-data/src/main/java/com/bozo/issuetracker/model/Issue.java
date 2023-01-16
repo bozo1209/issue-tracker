@@ -1,9 +1,14 @@
 package com.bozo.issuetracker.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "issue")
 public class Issue extends BaseEntity {
@@ -17,4 +22,12 @@ public class Issue extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "issue")
     private List<IssueComment> comments;
+
+    @Builder
+    public Issue(Long id, String description, User issueCreator, List<IssueComment> comments) {
+        super(id);
+        this.description = description;
+        this.issueCreator = issueCreator;
+        this.comments = comments;
+    }
 }
