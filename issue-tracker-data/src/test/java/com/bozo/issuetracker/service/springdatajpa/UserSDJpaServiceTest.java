@@ -68,7 +68,7 @@ class UserSDJpaServiceTest {
 
         User smith = service.findById(USER_ID);
 
-        assertNull(smith);
+        assertNull(smith.getId());
 
         verify(userRepository).findById(anyLong());
     }
@@ -91,7 +91,7 @@ class UserSDJpaServiceTest {
 
         User smith = service.findByName(USER_NAME);
 
-        assertNull(smith);
+        assertNull(smith.getId());
 
         verify(userRepository).findByName(anyString());
     }

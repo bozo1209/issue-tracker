@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.service.springdatajpa;
 
 import com.bozo.issuetracker.model.User;
+import com.bozo.issuetracker.repository.UserRepository;
 import com.bozo.issuetracker.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,34 +12,36 @@ import java.util.List;
 @AllArgsConstructor
 public class UserSDJpaService implements UserService {
 
+    private final UserRepository userRepository;
+
     @Override
     public List<User> findAll() {
-        return null;
+        return userRepository.findAll();
     }
 
     @Override
-    public User findById(Long aLong) {
-        return null;
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseGet(User::new);
     }
 
     @Override
     public User findByName(String name) {
-        return null;
+        return userRepository.findByName(name).orElseGet(User::new);
     }
 
     @Override
     public User save(User object) {
-        return null;
+        return userRepository.save(object);
     }
 
     @Override
     public void delete(User object) {
-
+        userRepository.delete(object);
     }
 
     @Override
-    public void deleteById(Long aLong) {
-
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 
 }
