@@ -75,25 +75,25 @@ class UserSDJpaServiceTest {
 
     @Test
     void findByName() {
-        when(userRepository.findByName(anyString())).thenReturn(Optional.of(returnedUser));
+        when(userRepository.findByUserName(anyString())).thenReturn(Optional.of(returnedUser));
 
-        User smith = service.findByName(USER_NAME);
+        User smith = service.findByUserName(USER_NAME);
 
         assertNotNull(smith);
         assertEquals(USER_NAME, smith.getUserName());
 
-        verify(userRepository).findByName(anyString());
+        verify(userRepository).findByUserName(anyString());
     }
 
     @Test
     void findByNameNotFound() {
-        when(userRepository.findByName(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByUserName(anyString())).thenReturn(Optional.empty());
 
-        User smith = service.findByName(USER_NAME);
+        User smith = service.findByUserName(USER_NAME);
 
         assertNull(smith.getId());
 
-        verify(userRepository).findByName(anyString());
+        verify(userRepository).findByUserName(anyString());
     }
 
     @Test

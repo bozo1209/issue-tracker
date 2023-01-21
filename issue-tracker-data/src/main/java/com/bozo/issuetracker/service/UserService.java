@@ -4,5 +4,5 @@ import com.bozo.issuetracker.model.User;
 
 public interface UserService extends CrudService<User, Long>{
 
-    User findByName(String name);
+    User findByUserName(String name);
 }
