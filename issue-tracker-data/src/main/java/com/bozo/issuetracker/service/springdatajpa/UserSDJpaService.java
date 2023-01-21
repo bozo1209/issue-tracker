@@ -25,8 +25,8 @@ public class UserSDJpaService implements UserService {
     }
 
     @Override
-    public User findByName(String name) {
-        return userRepository.findByName(name).orElseGet(User::new);
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName).orElseGet(User::new);
     }
 
     @Override
