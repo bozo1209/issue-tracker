@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>List of issues</title>
+</head>
+<body>
+<div>
+    <table>
+        <tr>
+            <th>description</th>
+            <th>issueCreator</th>
+            <th>comments</th>
+        </tr>
+        <tr th:each="issue : ${issueList}">
+            <td th:text="${issue.description}">desc</td>
+            <td th:text="${issue.issueCreator}">creator</td>
+            <td th:text="${issue.size}">size</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
