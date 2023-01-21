@@ -1,5 +1,6 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.enums.HTMLPaths;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -8,6 +9,6 @@ public class IndexController {
 
     @GetMapping({"/", "/index", "/index.html"})
     public String index(){
-        return "index";
+        return HTMLPaths.INDEX.getPath();
     }
 }
