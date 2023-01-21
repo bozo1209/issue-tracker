@@ -1,5 +1,6 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.enums.HTMLPaths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,6 @@ class IndexControllerTest {
     void index() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"));
+                .andExpect(view().name(HTMLPaths.INDEX.getPath()));
     }
 }
