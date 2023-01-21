@@ -2,7 +2,8 @@ package com.bozo.issuetracker.enums;
 
 public enum HTMLPaths {
     INDEX("index"),
-    ISSUELIST("issue/issueList");
+    ISSUE_LIST("issue/issueList"),
+    ISSUE("issue/issue");
 
     private final String htmlPath;
 
