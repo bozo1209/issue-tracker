@@ -24,6 +24,7 @@ public class IssueController {
 
     @GetMapping("/all")
     public String allIssueList(Model model){
-        return null;
+        model.addAttribute("issueList", issueService.findAll());
+        return HTMLPaths.ISSUE_LIST.getPath();
     }
 }
