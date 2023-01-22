@@ -15,7 +15,7 @@
         <tr th:each="issue : ${issueList}">
             <td th:text="${issue.description}">desc</td>
             <td th:text="${issue.issueCreator}">creator</td>
-            <td th:text="${issue.size}">size</td>
+            <td th:text="${issue.comments.size}">size</td>
         </tr>
     </table>
 </div>
