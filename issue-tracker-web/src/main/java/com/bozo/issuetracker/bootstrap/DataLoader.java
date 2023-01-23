@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.bootstrap;
 
 import com.bozo.issuetracker.model.Issue;
+import com.bozo.issuetracker.model.IssueComment;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueCommentService;
 import com.bozo.issuetracker.service.IssueService;
@@ -40,6 +41,13 @@ public class DataLoader implements CommandLineRunner {
 
         savedUser1.getIssuesObserve().add(issue2);
 
+        IssueComment comment1 = IssueComment.builder().comment("comment 1").commentCreator(savedUser2).issue(savedUser1.getIssuesCreated().get(0)).build();
+        savedUser2.getCommentsCreated().add(comment1);
+
+        IssueComment comment2 = IssueComment.builder().comment("comment 2").commentCreator(savedUser1).issue(savedUser1.getIssuesCreated().get(0)).build();
+        savedUser1.getCommentsCreated().add(comment2);
+
         userService.save(savedUser1);
+        userService.save(savedUser2);
     }
 }
