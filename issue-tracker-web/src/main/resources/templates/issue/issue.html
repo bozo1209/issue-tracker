@@ -7,7 +7,7 @@
 <body>
 <div>
     <h2 th:text="${issue.description}">desc</h2>
-    <h4 th:text="${issue.issueCreator}">creator</h4>
+    <h4 th:text="${issue.issueCreator.userName}">creator</h4>
     <ul th:each="comment : ${issue.comments}">
         <li th:text="${comment.comment}">el</li>
     </ul>
