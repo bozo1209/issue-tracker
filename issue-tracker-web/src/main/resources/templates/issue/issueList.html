@@ -11,11 +11,13 @@
             <th>description</th>
             <th>issueCreator</th>
             <th>comments</th>
+            <th>link</th>
         </tr>
         <tr th:each="issue : ${issueList}">
             <td th:text="${issue.description}">desc</td>
             <td th:text="${issue.issueCreator.userName}">creator</td>
             <td th:text="${issue.comments.size}">size</td>
+            <td><a th:href="@{/issue/{id}(id=${issue.id})}" th:text="'go to issue'"></a></td>
         </tr>
     </table>
 </div>
