@@ -66,4 +66,12 @@ class IssueControllerTest {
 
         verifyNoMoreInteractions(issueService);
     }
+
+    @Test
+    void addNewIssue() throws Exception {
+        mockMvc.perform(get("/issue/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
+                .andExpect(model().attributeExists("issue"));
+    }
 }
