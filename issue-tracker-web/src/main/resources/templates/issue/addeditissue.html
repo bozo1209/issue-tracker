@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title  th:with="text=${issue['new']} ? 'Add Issue' : 'Update Issue'" th:text="${text}">Title</title>
+</head>
+<body>
+<form th:action="@{/issue/new}" th:object="${issue}" method="post">
+<div>
+    <label>description</label>
+    <input type="text" th:field="*{description}">
+</div>
+<div>
+    <label>comments</label>
+    <textarea th:field="*{comments}" rows="5" cols="50"></textarea>
+</div>
+    <button type="submit" th:with="text=${issue['new']} ? 'Add Issue' : 'Update Issue'" th:text="${text}">add new</button>
+</form>
+</body>
+</html>
