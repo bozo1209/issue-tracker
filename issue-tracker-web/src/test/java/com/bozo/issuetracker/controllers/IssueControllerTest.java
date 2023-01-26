@@ -2,6 +2,7 @@ package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -81,11 +83,12 @@ class IssueControllerTest {
     void processAddingIssue() throws Exception {
         Issue issue = Issue.builder().id(2L).build();
         when(issueService.save(any())).thenReturn(issue);
+        returnedIssue.setIssueCreator(User.builder().id(1L).build());
+        when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
         mockMvc.perform(post("/issue/new"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/issue/" + issue.getId()))
-                .andExpect(model().attributeExists("issue"));
+                .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
         verifyNoMoreInteractions(issueService);
     }

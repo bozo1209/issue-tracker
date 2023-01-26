@@ -2,6 +2,7 @@ package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,12 @@ public class IssueController {
     }
 
     @PostMapping("/new")
-    public String processAddingIssue(@Valid Issue issue, BindingResult result){
-        return null;
+    public String processAddingIssue(@Valid Issue issue, BindingResult result, Model model){
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_ISSUE.getPath();
+        }
+        issue.setIssueCreator(issueService.findById(1L).getIssueCreator());
+        Issue savedIssue = issueService.save(issue);
+        return "redirect:/issue/" + savedIssue.getId();
     }
 }
