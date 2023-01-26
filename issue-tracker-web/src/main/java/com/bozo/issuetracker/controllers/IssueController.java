@@ -3,14 +3,13 @@ package com.bozo.issuetracker.controllers;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.service.IssueService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/issue")
 @Controller
@@ -40,5 +39,10 @@ public class IssueController {
     public String addNewIssue(Model model){
         model.addAttribute("issue", Issue.builder().build());
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
+    }
+
+    @PostMapping("/new")
+    public String processAddingIssue(@Valid Issue issue, BindingResult result){
+        return null;
     }
 }

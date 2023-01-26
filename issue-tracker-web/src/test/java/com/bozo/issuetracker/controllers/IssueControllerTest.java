@@ -15,10 +15,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,5 +75,18 @@ class IssueControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
                 .andExpect(model().attributeExists("issue"));
+    }
+
+    @Test
+    void processAddingIssue() throws Exception {
+        Issue issue = Issue.builder().id(2L).build();
+        when(issueService.save(any())).thenReturn(issue);
+
+        mockMvc.perform(post("/issue/new"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/issue/" + issue.getId()))
+                .andExpect(model().attributeExists("issue"));
+
+        verifyNoMoreInteractions(issueService);
     }
 }
