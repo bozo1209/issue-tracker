@@ -107,6 +107,7 @@ class IssueControllerTest {
 
     @Test
     void processEditingIssue() throws Exception {
+        when(issueService.findById(anyLong())).thenReturn(returnedIssue);
         when(issueService.save(any())).thenReturn(returnedIssue);
 
         mockMvc.perform(post("/issue/{id}/edit", returnedIssue.getId()))
