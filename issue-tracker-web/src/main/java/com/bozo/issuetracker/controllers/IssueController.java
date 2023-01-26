@@ -43,11 +43,30 @@ public class IssueController {
     }
 
     @PostMapping("/new")
-    public String processAddingIssue(@Valid Issue issue, BindingResult result, Model model){
+    public String processAddingIssue(@Valid Issue issue, BindingResult result){
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
         issue.setIssueCreator(issueService.findById(1L).getIssueCreator());
+        Issue savedIssue = issueService.save(issue);
+        return "redirect:/issue/" + savedIssue.getId();
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editIssue(@PathVariable Long id, Model model){
+        model.addAttribute("issue", issueService.findById(id));
+        return HTMLPaths.ADD_EDIT_ISSUE.getPath();
+    }
+
+    @PostMapping("/{id}/edit")
+    public String processEditingIssue(@Valid Issue issue, @PathVariable Long id, BindingResult result){
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_ISSUE.getPath();
+        }
+        issue.setId(id);
+        Issue issueById = issueService.findById(id);
+        issue.setIssueCreator(issueById.getIssueCreator());
+        issue.setComments(issueById.getComments());
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
