@@ -63,7 +63,7 @@ class IssueControllerTest {
     void showIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(get("/issue/1"))
+        mockMvc.perform(get("/issue/{id}", returnedIssue.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ISSUE.getPath()))
                 .andExpect(model().attributeExists("issue"));
@@ -89,6 +89,29 @@ class IssueControllerTest {
         mockMvc.perform(post("/issue/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
+
+        verifyNoMoreInteractions(issueService);
+    }
+
+    @Test
+    void editIssue() throws Exception {
+        when(issueService.findById(anyLong())).thenReturn(returnedIssue);
+
+        mockMvc.perform(get("/issue/{id}/edit", returnedIssue.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
+                .andExpect(model().attribute("issue", returnedIssue));
+
+        verifyNoMoreInteractions(issueService);
+    }
+
+    @Test
+    void processEditingIssue() throws Exception {
+        when(issueService.save(any())).thenReturn(returnedIssue);
+
+        mockMvc.perform(post("/issue/{id}/edit", returnedIssue.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/issue/" + returnedIssue.getId()));
 
         verifyNoMoreInteractions(issueService);
     }
