@@ -73,6 +73,7 @@ public class IssueController {
 
     @GetMapping("{id}/delete")
     public String deleteIssue(@PathVariable Long id){
-        return null;
+        issueService.deleteById(id);
+        return "redirect:/issue/all";
     }
 }
