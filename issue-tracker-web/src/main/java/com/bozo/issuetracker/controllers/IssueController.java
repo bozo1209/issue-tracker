@@ -70,4 +70,9 @@ public class IssueController {
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
+
+    @GetMapping("{id}/delete")
+    public String deleteIssue(@PathVariable Long id){
+        return null;
+    }
 }
