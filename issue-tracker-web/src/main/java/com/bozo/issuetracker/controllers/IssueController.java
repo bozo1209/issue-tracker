@@ -2,7 +2,6 @@ package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
-import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -47,7 +46,10 @@ public class IssueController {
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
-        issue.setIssueCreator(issueService.findById(1L).getIssueCreator());
+
+        Issue issueById = issueService.findById(1L);
+        issue.setIssueCreator(issueById.getIssueCreator());
+        issueById.getIssueCreator().getIssuesObserve().add(issue);
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
@@ -73,6 +75,8 @@ public class IssueController {
 
     @GetMapping("{id}/delete")
     public String deleteIssue(@PathVariable Long id){
+        Issue issueById = issueService.findById(id);
+        issueById.getIssueCreator().getIssuesObserve().remove(issueById);
         issueService.deleteById(id);
         return "redirect:/issue/all";
     }

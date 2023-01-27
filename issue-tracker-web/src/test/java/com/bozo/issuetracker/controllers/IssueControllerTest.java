@@ -41,6 +41,7 @@ class IssueControllerTest {
     @BeforeEach
     void setUp() {
         returnedIssue = Issue.builder().id(1L).build();
+        returnedIssue.setIssueCreator(User.builder().id(1L).build());
         returnedIssueList = List.of(returnedIssue);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -82,7 +83,6 @@ class IssueControllerTest {
     void processAddingIssue() throws Exception {
         Issue issue = Issue.builder().id(2L).build();
         when(issueService.save(any())).thenReturn(issue);
-        returnedIssue.setIssueCreator(User.builder().id(1L).build());
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
         mockMvc.perform(post("/issue/new"))
@@ -118,6 +118,8 @@ class IssueControllerTest {
 
     @Test
     void deleteIssue() throws Exception {
+        when(issueService.findById(anyLong())).thenReturn(returnedIssue);
+
         mockMvc.perform(get("/issue/{id}/delete", returnedIssue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/all"));
