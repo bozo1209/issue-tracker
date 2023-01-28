@@ -47,6 +47,12 @@ public class DataLoader implements CommandLineRunner {
         IssueComment comment2 = IssueComment.builder().comment("comment 2").commentCreator(savedUser1).issue(savedUser1.getIssuesCreated().get(0)).build();
         savedUser1.getCommentsCreated().add(comment2);
 
+        IssueComment comment3 = IssueComment.builder().comment("comment 3").commentCreator(savedUser2).issue(savedUser1.getIssuesCreated().get(0)).build();
+        savedUser2.getCommentsCreated().add(comment3);
+
+        IssueComment comment4 = IssueComment.builder().comment("comment 4").commentCreator(savedUser1).issue(savedUser1.getIssuesCreated().get(0)).build();
+        savedUser1.getCommentsCreated().add(comment4);
+
         userService.save(savedUser1);
         userService.save(savedUser2);
     }
