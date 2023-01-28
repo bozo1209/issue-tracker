@@ -3,9 +3,7 @@ package com.bozo.issuetracker.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Getter
 @Setter
@@ -23,10 +21,10 @@ public class Issue extends BaseEntity {
     private User issueCreator;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "issue")
-    private List<IssueComment> comments = new ArrayList<>();
+    private Set<IssueComment> comments = new HashSet<>();
 
     @Builder
-    public Issue(Long id, String description, User issueCreator, List<IssueComment> comments) {
+    public Issue(Long id, String description, User issueCreator, Set<IssueComment> comments) {
         super(id);
         this.description = description;
         this.issueCreator = issueCreator;
