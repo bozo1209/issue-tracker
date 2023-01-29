@@ -6,6 +6,15 @@
 </head>
 <body>
 <div>
+    <a th:href="@{/issue/new}" th:text="'add new'"></a>
+</div>
+<div>
+    <a th:href="@{/issue/{id}/edit(id=${issue.id})}" th:text="edit"></a>
+</div>
+<div>
+    <a th:href="@{/issue/{id}/delete(id=${issue.id})}" th:text="delete"></a>
+</div>
+<div>
     <h2 th:text="${issue.description}">desc</h2>
     <h4 th:text="${issue.issueCreator.userName}">creator</h4>
     <ul th:each="comment : ${issue.comments}">
