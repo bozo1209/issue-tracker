@@ -3,6 +3,7 @@ package com.bozo.issuetracker.controllers;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
 import com.bozo.issuetracker.service.IssueCommentService;
+import com.bozo.issuetracker.service.IssueService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,6 +28,9 @@ class IssueCommentControllerTest {
 
     @Mock
     IssueCommentService commentService;
+
+    @Mock
+    IssueService issueService;
 
     @InjectMocks
     IssueCommentController controller;
@@ -47,6 +52,7 @@ class IssueCommentControllerTest {
     @Test
     void processAddingComment() throws Exception{
         IssueComment comment = IssueComment.builder().id(2L).issue(issue).build();
+        when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(comment);
 
         mockMvc.perform(post("/issue/{issueId}/comment/new", issue.getId()))
