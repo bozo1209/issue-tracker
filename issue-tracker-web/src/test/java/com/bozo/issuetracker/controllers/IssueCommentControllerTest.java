@@ -1,0 +1,58 @@
+package com.bozo.issuetracker.controllers;
+
+import com.bozo.issuetracker.model.Issue;
+import com.bozo.issuetracker.model.IssueComment;
+import com.bozo.issuetracker.service.IssueCommentService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@ExtendWith(MockitoExtension.class)
+class IssueCommentControllerTest {
+
+    @Mock
+    IssueCommentService commentService;
+
+    @InjectMocks
+    IssueCommentController controller;
+
+    MockMvc mockMvc;
+
+    Issue issue;
+    IssueComment returnedComment;
+    List<IssueComment> returnedIssueCommentList;
+
+    @BeforeEach
+    void setUp() {
+        issue = Issue.builder().id(1L).build();
+        returnedComment = IssueComment.builder().id(1L).issue(issue).build();
+
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
+
+    @Test
+    void processAddingComment() throws Exception{
+        IssueComment comment = IssueComment.builder().id(2L).issue(issue).build();
+        when(commentService.save(any())).thenReturn(comment);
+
+        mockMvc.perform(post("/issue/{issueId}/comment/new", issue.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/issue/" + issue.getId()));
+
+        verifyNoMoreInteractions(commentService);
+    }
+}
