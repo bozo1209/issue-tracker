@@ -2,6 +2,7 @@ package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
+import com.bozo.issuetracker.model.IssueComment;
 import com.bozo.issuetracker.service.IssueService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class IssueController {
     @GetMapping("/{id}")
     public String showIssue(@PathVariable Long id, Model model){
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("comment", IssueComment.builder().build());
         return HTMLPaths.ISSUE.getPath();
     }
 
