@@ -21,5 +21,12 @@
         <li th:text="${comment.comment}">el</li>
     </ul>
 </div>
+<div>
+    <form th:action="@{/issue/{issueId}/comment/new(issueId=${issue.id})}" th:object="${comment}" method="post">
+        <label>comment</label>
+        <input type="text" th:field="*{comment}">
+        <button type="submit" th:text="'add comment'">add</button>
+    </form>
+</div>
 </body>
 </html>
