@@ -28,4 +28,14 @@ public class IssueCommentController {
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
     }
+
+    @PostMapping("/{commentId}/edit")
+    public String processEditingComment(@Valid IssueComment comment, @PathVariable Long issueId, @PathVariable Long commentId, BindingResult result){
+        Issue issueById = issueService.findById(issueId);
+        comment.setId(commentId);
+        comment.setIssue(issueById);
+        comment.setCommentCreator(issueById.getIssueCreator());
+        issueCommentService.save(comment);
+        return "redirect:/issue/" + issueId;
+    }
 }

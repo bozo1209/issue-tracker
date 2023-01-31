@@ -17,9 +17,22 @@
 <div>
     <h2 th:text="${issue.description}">desc</h2>
     <h4 th:text="${issue.issueCreator.userName}">creator</h4>
-    <ul th:each="comment : ${issue.comments}">
-        <li th:text="${comment.comment}">el</li>
+    <ul>
+        <li th:each="comment : ${issue.comments}" th:text="${comment.comment}">el</li>
     </ul>
+    <table>
+        <tr>
+            <th>text</th>
+        </tr>
+        <tr th:each="comment : ${issue.comments}">
+            <td th:text="${comment.comment}"></td>
+            <td><form th:action="@{/issue/{issueId}/comment/{commentId}/edit(issueId=${issue.id}, commentId=${comment.id})}" th:object="${comment}" method="post">
+                <label>comment</label>
+                <input type="text" th:field="*{comment}">
+                <button type="submit" th:text="'edit comment'">add</button>
+            </form></td>
+        </tr>
+    </table>
 </div>
 <div>
     <form th:action="@{/issue/{issueId}/comment/new(issueId=${issue.id})}" th:object="${comment}" method="post">
