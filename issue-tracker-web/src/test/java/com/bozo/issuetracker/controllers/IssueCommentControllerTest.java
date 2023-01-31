@@ -61,4 +61,17 @@ class IssueCommentControllerTest {
 
         verifyNoMoreInteractions(commentService);
     }
+
+    @Test
+    void processEditingComment() throws Exception{
+        returnedComment.setComment("edit");
+        when(issueService.findById(anyLong())).thenReturn(issue);
+        when(commentService.save(any())).thenReturn(returnedComment);
+
+        mockMvc.perform(post("/issue/{issueId}/comment/{commentId}/edit", issue.getId(), returnedComment.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/issue/" + issue.getId()));
+
+        verifyNoMoreInteractions(commentService);
+    }
 }
