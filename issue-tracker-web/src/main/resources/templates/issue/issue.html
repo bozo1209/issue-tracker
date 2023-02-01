@@ -31,6 +31,7 @@
                 <input type="text" th:field="*{comment}">
                 <button type="submit" th:text="'edit comment'">add</button>
             </form></td>
+            <td><a th:href="@{/issue/{issueId}/comment/{commentId}/delete(issueId=${issue.id}, commentId=${comment.id})}" th:text="delete"></a></td>
         </tr>
     </table>
 </div>
