@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +38,10 @@ public class IssueCommentController {
         comment.setCommentCreator(issueById.getIssueCreator());
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
+    }
+
+    @GetMapping("/{commentId}/delete")
+    public String deleteComment(@PathVariable Long commentId){
+        return null;
     }
 }
