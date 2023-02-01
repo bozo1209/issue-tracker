@@ -77,6 +77,9 @@ class IssueCommentControllerTest {
 
     @Test
     void deleteComment() throws Exception{
+        when(commentService.findById(anyLong())).thenReturn(returnedComment);
+        when(issueService.findById(anyLong())).thenReturn(issue);
+
         mockMvc.perform(get("/issue/{issueId}/comment/{commentId}/delete", issue.getId(), returnedComment.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));

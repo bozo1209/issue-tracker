@@ -42,7 +42,8 @@ public class IssueCommentController {
 
     @GetMapping("/{commentId}/delete")
     public String deleteComment(@PathVariable Long commentId, @PathVariable Long issueId){
-        issueCommentService.findById(commentId);
+        issueService.findById(issueId).getComments().remove(issueCommentService.findById(commentId));
+        issueCommentService.deleteById(commentId);
         return "redirect:/issue/" + issueId;
     }
 }
