@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>List of users</title>
+</head>
+<body>
+<div>
+    <table>
+        <tr>
+            <th>user name</th>
+            <th>issue created number</th>
+            <th>issue observed number</th>
+            <th>comments number</th>
+        </tr>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.userName}">name</td>
+            <td th:text="${user.issuesCreated.size}">create</td>
+            <td th:text="${user.issuesObserve.size}">observe</td>
+            <td th:text="${user.commentsCreated.size}">comments</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
