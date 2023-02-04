@@ -1,5 +1,6 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ public class UserController {
 
     @GetMapping("/all")
     public String allUserList(Model model){
-        return null;
+        model.addAttribute("userList", userService.findAll());
+        return HTMLPaths.USER_LIST.getPath();
     }
 }
