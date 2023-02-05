@@ -73,7 +73,7 @@ class UserControllerTest {
     void addNewUser() throws Exception {
         mockMvc.perform(get("/user/new"))
                 .andExpect(status().isOk())
-                .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
+                .andExpect(view().name(HTMLPaths.ADD_EDIT_USER.getPath()))
                 .andExpect(model().attributeExists("user"));
     }
 

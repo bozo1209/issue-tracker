@@ -34,11 +34,16 @@ public class UserController {
 
     @GetMapping("/new")
     public String addNewUser(Model model){
-        return null;
+        model.addAttribute("user", User.builder().build());
+        return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 
     @PostMapping("/new")
     public String processAddingUser(@Valid User user, BindingResult result){
-        return null;
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_USER.getPath();
+        }
+        User savedUser = userService.save(user);
+        return "redirect:/user/" + savedUser.getId();
     }
 }
