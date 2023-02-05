@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,6 +52,18 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.USER_LIST.getPath()))
                 .andExpect(model().attributeExists("userList"));
+
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    void showUserById()throws Exception {
+        when(userService.findById(anyLong())).thenReturn(returnedUser);
+
+        mockMvc.perform(get("/user/{id}", returnedUser.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(HTMLPaths.USER.getPath()))
+                .andExpect(model().attributeExists("user"));
 
         verifyNoMoreInteractions(userService);
     }

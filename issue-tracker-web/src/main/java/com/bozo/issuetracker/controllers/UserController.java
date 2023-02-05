@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/user")
@@ -19,5 +20,10 @@ public class UserController {
     public String allUserList(Model model){
         model.addAttribute("userList", userService.findAll());
         return HTMLPaths.USER_LIST.getPath();
+    }
+
+    @GetMapping("/{id}")
+    public String showUserById(@PathVariable Long id){
+        return null;
     }
 }
