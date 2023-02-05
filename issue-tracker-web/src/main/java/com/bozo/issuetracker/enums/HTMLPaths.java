@@ -5,7 +5,8 @@ public enum HTMLPaths {
     ISSUE_LIST("issue/issueList"),
     ISSUE("issue/issue"),
     ADD_EDIT_ISSUE("issue/addeditissue"),
-    USER_LIST("user/userList");
+    USER_LIST("user/userList"),
+    USER("user/user");
 
     private final String htmlPath;
 
