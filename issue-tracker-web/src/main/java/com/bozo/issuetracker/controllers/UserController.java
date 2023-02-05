@@ -23,7 +23,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String showUserById(@PathVariable Long id){
-        return null;
+    public String showUserById(@PathVariable Long id, Model model){
+        model.addAttribute("user", userService.findById(id));
+        return HTMLPaths.USER.getPath();
     }
 }
