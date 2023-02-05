@@ -4,9 +4,10 @@ public enum HTMLPaths {
     INDEX("index"),
     ISSUE_LIST("issue/issueList"),
     ISSUE("issue/issue"),
-    ADD_EDIT_ISSUE("issue/addeditissue"),
+    ADD_EDIT_ISSUE("issue/addEditIssue"),
     USER_LIST("user/userList"),
-    USER("user/user");
+    USER("user/user"),
+    ADD_EDIT_USER("user/addEditUser");
 
     private final String htmlPath;
 
