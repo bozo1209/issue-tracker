@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -57,13 +58,33 @@ class UserControllerTest {
     }
 
     @Test
-    void showUserById()throws Exception {
+    void showUserById() throws Exception {
         when(userService.findById(anyLong())).thenReturn(returnedUser);
 
         mockMvc.perform(get("/user/{id}", returnedUser.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.USER.getPath()))
                 .andExpect(model().attributeExists("user"));
+
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    void addNewUser() throws Exception {
+        mockMvc.perform(get("/user/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
+                .andExpect(model().attributeExists("user"));
+    }
+
+    @Test
+    void processAddingUser() throws Exception {
+        User user = User.builder().id(2L).build();
+        when(userService.save(any())).thenReturn(user);
+
+        mockMvc.perform(post("/user/new"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/user/" + user.getId()));
 
         verifyNoMoreInteractions(userService);
     }
