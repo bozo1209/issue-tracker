@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.userName}"></title>
+</head>
+<body>
+<div>
+    <h2 th:text="${user.userName}"></h2>
+</div>
+<div>
+    <h3>issues created</h3>
+    <ul>
+        <li th:each="issue : ${user.issuesCreated}" th:text="${issue.description}">el</li>
+    </ul>
+</div>
+<div>
+    <h3>issues observe</h3>
+    <ul>
+        <li th:each="issue : ${user.issuesObserve}" th:text="${issue.description}">el</li>
+    </ul>
+</div>
+</body>
+</html>
