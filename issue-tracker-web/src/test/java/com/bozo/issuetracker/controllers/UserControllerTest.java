@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
+    String USER_PATH = "/user";
+
     @Mock
     UserService userService;
 
@@ -49,7 +51,7 @@ class UserControllerTest {
     void allUserList() throws Exception {
         when(userService.findAll()).thenReturn(returnedUserList);
 
-        mockMvc.perform(get("/user/all"))
+        mockMvc.perform(get(USER_PATH + "/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.USER_LIST.getPath()))
                 .andExpect(model().attributeExists("userList"));
@@ -61,7 +63,7 @@ class UserControllerTest {
     void showUserById() throws Exception {
         when(userService.findById(anyLong())).thenReturn(returnedUser);
 
-        mockMvc.perform(get("/user/{id}", returnedUser.getId()))
+        mockMvc.perform(get(USER_PATH + "/{id}", returnedUser.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.USER.getPath()))
                 .andExpect(model().attributeExists("user"));
@@ -71,7 +73,7 @@ class UserControllerTest {
 
     @Test
     void addNewUser() throws Exception {
-        mockMvc.perform(get("/user/new"))
+        mockMvc.perform(get(USER_PATH + "/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_USER.getPath()))
                 .andExpect(model().attributeExists("user"));
@@ -82,7 +84,7 @@ class UserControllerTest {
         User user = User.builder().id(2L).build();
         when(userService.save(any())).thenReturn(user);
 
-        mockMvc.perform(post("/user/new"))
+        mockMvc.perform(post(USER_PATH + "/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user/" + user.getId()));
 

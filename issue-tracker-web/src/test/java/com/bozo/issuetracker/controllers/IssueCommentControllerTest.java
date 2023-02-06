@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class IssueCommentControllerTest {
 
+    String COMMENT_PATH = "/issue/{issueId}/comment";
+
     @Mock
     IssueCommentService commentService;
 
@@ -55,7 +57,7 @@ class IssueCommentControllerTest {
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(comment);
 
-        mockMvc.perform(post("/issue/{issueId}/comment/new", issue.getId()))
+        mockMvc.perform(post(COMMENT_PATH + "/new", issue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
@@ -68,7 +70,7 @@ class IssueCommentControllerTest {
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(returnedComment);
 
-        mockMvc.perform(post("/issue/{issueId}/comment/{commentId}/edit", issue.getId(), returnedComment.getId()))
+        mockMvc.perform(post(COMMENT_PATH + "/{commentId}/edit", issue.getId(), returnedComment.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
@@ -80,7 +82,7 @@ class IssueCommentControllerTest {
         when(commentService.findById(anyLong())).thenReturn(returnedComment);
         when(issueService.findById(anyLong())).thenReturn(issue);
 
-        mockMvc.perform(get("/issue/{issueId}/comment/{commentId}/delete", issue.getId(), returnedComment.getId()))
+        mockMvc.perform(get(COMMENT_PATH + "/{commentId}/delete", issue.getId(), returnedComment.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
