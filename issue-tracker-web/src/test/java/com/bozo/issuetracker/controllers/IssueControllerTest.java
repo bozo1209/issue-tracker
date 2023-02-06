@@ -27,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class IssueControllerTest {
 
+    String ISSUE_PATH = "/issue";
+
     @Mock
     IssueService issueService;
 
@@ -51,7 +53,7 @@ class IssueControllerTest {
     void allIssueList() throws Exception {
         when(issueService.findAll()).thenReturn(returnedIssueList);
 
-        mockMvc.perform(get("/issue/all"))
+        mockMvc.perform(get(ISSUE_PATH +"/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ISSUE_LIST.getPath()))
                 .andExpect(model().attributeExists("issueList"));
@@ -63,7 +65,7 @@ class IssueControllerTest {
     void showIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(get("/issue/{id}", returnedIssue.getId()))
+        mockMvc.perform(get(ISSUE_PATH +"/{id}", returnedIssue.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ISSUE.getPath()))
                 .andExpect(model().attributeExists("issue"));
@@ -73,7 +75,7 @@ class IssueControllerTest {
 
     @Test
     void addNewIssue() throws Exception {
-        mockMvc.perform(get("/issue/new"))
+        mockMvc.perform(get(ISSUE_PATH +"/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
                 .andExpect(model().attributeExists("issue"));
@@ -85,7 +87,7 @@ class IssueControllerTest {
         when(issueService.save(any())).thenReturn(issue);
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(post("/issue/new"))
+        mockMvc.perform(post(ISSUE_PATH +"/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
@@ -96,7 +98,7 @@ class IssueControllerTest {
     void editIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(get("/issue/{id}/edit", returnedIssue.getId()))
+        mockMvc.perform(get(ISSUE_PATH +"/{id}/edit", returnedIssue.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
                 .andExpect(model().attribute("issue", returnedIssue));
@@ -109,7 +111,7 @@ class IssueControllerTest {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
         when(issueService.save(any())).thenReturn(returnedIssue);
 
-        mockMvc.perform(post("/issue/{id}/edit", returnedIssue.getId()))
+        mockMvc.perform(post(ISSUE_PATH +"/{id}/edit", returnedIssue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + returnedIssue.getId()));
 
@@ -120,7 +122,7 @@ class IssueControllerTest {
     void deleteIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(get("/issue/{id}/delete", returnedIssue.getId()))
+        mockMvc.perform(get(ISSUE_PATH +"/{id}/delete", returnedIssue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/all"));
 
