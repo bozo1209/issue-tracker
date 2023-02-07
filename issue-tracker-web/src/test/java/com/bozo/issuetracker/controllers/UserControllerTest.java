@@ -90,4 +90,28 @@ class UserControllerTest {
 
         verifyNoMoreInteractions(userService);
     }
+
+    @Test
+    void editUser() throws Exception {
+        when(userService.findById(anyLong())).thenReturn(returnedUser);
+
+        mockMvc.perform(get(USER_PATH + "/{id}/edit", returnedUser.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(HTMLPaths.ADD_EDIT_USER.getPath()))
+                .andExpect(model().attributeExists("user"));
+
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    void processEditingUser() throws Exception {
+        when(userService.findById(anyLong())).thenReturn(returnedUser);
+        when(userService.save(any())).thenReturn(returnedUser);
+
+        mockMvc.perform(post(USER_PATH + "/{id}/edit", returnedUser.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/user/" + returnedUser.getId()));
+
+        verifyNoMoreInteractions(userService);
+    }
 }

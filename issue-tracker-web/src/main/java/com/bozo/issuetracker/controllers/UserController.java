@@ -46,4 +46,14 @@ public class UserController {
         User savedUser = userService.save(user);
         return "redirect:/user/" + savedUser.getId();
     }
+
+    @GetMapping("/{id}/edit")
+    public String editUser(@PathVariable Long id, Model model){
+        return null;
+    }
+
+    @PostMapping("/{id}/edit")
+    public String processEditingUser(@Valid User user, @PathVariable Long id, BindingResult result){
+        return null;
+    }
 }
