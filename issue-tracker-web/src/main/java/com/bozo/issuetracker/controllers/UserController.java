@@ -49,11 +49,18 @@ public class UserController {
 
     @GetMapping("/{id}/edit")
     public String editUser(@PathVariable Long id, Model model){
-        return null;
+        model.addAttribute("user", userService.findById(id));
+        return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 
     @PostMapping("/{id}/edit")
     public String processEditingUser(@Valid User user, @PathVariable Long id, BindingResult result){
-        return null;
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_USER.getPath();
+        }
+        User userById = userService.findById(id);
+        userById.setUserName(user.getUserName());
+        User savedUser = userService.save(userById);
+        return "redirect:/user/" + savedUser.getId();
     }
 }
