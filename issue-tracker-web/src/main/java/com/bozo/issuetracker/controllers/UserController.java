@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+
 @RequestMapping("/user")
 @Controller
 @AllArgsConstructor
@@ -62,5 +64,11 @@ public class UserController {
         userById.setUserName(user.getUserName());
         User savedUser = userService.save(userById);
         return "redirect:/user/" + savedUser.getId();
+    }
+
+    @GetMapping("/{id}/delete")
+    public String deleteUser(@PathVariable Long id){
+        userService.deleteById(id);
+        return "redirect:/user/all";
     }
 }

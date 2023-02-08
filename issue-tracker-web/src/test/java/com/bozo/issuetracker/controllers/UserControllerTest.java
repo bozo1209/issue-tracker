@@ -17,8 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -113,5 +112,14 @@ class UserControllerTest {
                 .andExpect(view().name("redirect:/user/" + returnedUser.getId()));
 
         verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    void deleteUser() throws Exception {
+        mockMvc.perform(get(USER_PATH + "/{id}/delete", returnedUser.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/user/all"));
+
+        verify(userService).deleteById(anyLong());
     }
 }
