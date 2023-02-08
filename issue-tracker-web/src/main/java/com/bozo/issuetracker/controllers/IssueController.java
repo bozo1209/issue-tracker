@@ -75,7 +75,7 @@ public class IssueController {
         return "redirect:/issue/" + savedIssue.getId();
     }
 
-    @GetMapping("{id}/delete")
+    @GetMapping("/{id}/delete")
     public String deleteIssue(@PathVariable Long id){
         Issue issueById = issueService.findById(id);
         issueById.getIssueCreator().getIssuesObserve().remove(issueById);

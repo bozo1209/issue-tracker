@@ -63,4 +63,9 @@ public class UserController {
         User savedUser = userService.save(userById);
         return "redirect:/user/" + savedUser.getId();
     }
+
+    @GetMapping("/{id}/delete")
+    public String deleteUser(@PathVariable Long id){
+        return null;
+    }
 }
