@@ -6,6 +6,15 @@
 </head>
 <body>
 <div>
+    <a th:href="@{/user/new}" th:text="'add new'"></a>
+</div>
+<div>
+    <a th:href="@{/user/{id}/edit(id=${user.id})}" th:text="edit"></a>
+</div>
+<div>
+    <a th:href="@{/user/{id}/delete(id=${user.id})}" th:text="delete"></a>
+</div>
+<div>
     <h2 th:text="${user.userName}"></h2>
 </div>
 <div>
