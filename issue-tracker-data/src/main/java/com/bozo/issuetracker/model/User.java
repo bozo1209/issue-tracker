@@ -25,7 +25,7 @@ public class User extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "issue_id"))
     private Set<Issue> issuesObserve = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentCreator")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "commentCreator")
     private List<IssueComment> commentsCreated = new ArrayList<>();
 
     @Builder

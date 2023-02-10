@@ -68,7 +68,9 @@ public class UserController {
 
     @GetMapping("/{id}/delete")
     public String deleteUser(@PathVariable Long id){
-        userService.findById(id).getIssuesCreated().forEach(issue -> issue.setIssueCreator(null));
+        User userById = userService.findById(id);
+        userById.getIssuesCreated().forEach(issue -> issue.setIssueCreator(null));
+        userById.getCommentsCreated().forEach(comment -> comment.setCommentCreator(null));
         userService.deleteById(id);
         return "redirect:/user/all";
     }
