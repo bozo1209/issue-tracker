@@ -16,7 +16,7 @@ public class User extends BaseEntity {
     @Column(name = "user_name")
     private String userName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "issueCreator")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "issueCreator")
     private List<Issue> issuesCreated = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -116,6 +116,8 @@ class UserControllerTest {
 
     @Test
     void deleteUser() throws Exception {
+        when(userService.findById(anyLong())).thenReturn(returnedUser);
+
         mockMvc.perform(get(USER_PATH + "/{id}/delete", returnedUser.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user/all"));
