@@ -28,6 +28,16 @@ public class User extends BaseEntity {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "commentCreator")
     private List<IssueComment> commentsCreated = new ArrayList<>();
 
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(name = "app_user_team_leader",
+            joinColumns = @JoinColumn(name = "app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "leader_of_team_id"))
+    private Team leaderOfTeam;
+
+    @ManyToOne
+    @JoinColumn(name = "member_of_team_id")
+    private Team memberOfTeam;
+
     @Builder
     public User(Long id, String userName, List<Issue> issuesCreated, Set<Issue> issuesObserve, List<IssueComment> commentsCreated) {
         super(id);
