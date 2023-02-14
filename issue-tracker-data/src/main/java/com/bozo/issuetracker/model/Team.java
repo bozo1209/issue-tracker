@@ -24,4 +24,7 @@ public class Team extends BaseEntity{
 
     @Column(name = "team_name")
     private String teamName;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "assignedTeam")
+    private List<Project> projects;
 }

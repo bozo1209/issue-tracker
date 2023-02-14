@@ -23,6 +23,10 @@ public class Issue extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "issue")
     private Set<IssueComment> comments = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @Builder
     public Issue(Long id, String description, User issueCreator, Set<IssueComment> comments) {
         super(id);
