@@ -34,9 +34,7 @@ class TeamSDJpaServiceTest {
 
     @BeforeEach
     void setUp() {
-        returnedTeam = new Team();
-        returnedTeam.setId(TEAM_ID);
-        returnedTeam.setTeamName(TEAM_NAME);
+        returnedTeam = Team.builder().id(TEAM_ID).teamName(TEAM_NAME).build();
     }
 
     @Test
@@ -80,9 +78,7 @@ class TeamSDJpaServiceTest {
     @Test
     void save() {
         String name = "team 2";
-        Team teamToSave = new Team();
-        teamToSave.setId(2L);
-        teamToSave.setTeamName(name);
+        Team teamToSave = Team.builder().id(2L).teamName(name).build();
 
         when(teamRepository.save(any())).thenReturn(teamToSave);
 
@@ -96,7 +92,7 @@ class TeamSDJpaServiceTest {
 
     @Test
     void delete() {
-        service.delete(new Team());
+        service.delete(Team.builder().build());
 
         verify(teamRepository).delete(any());
     }
