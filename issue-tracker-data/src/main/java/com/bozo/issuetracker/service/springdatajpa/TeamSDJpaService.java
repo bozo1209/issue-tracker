@@ -16,26 +16,26 @@ public class TeamSDJpaService implements TeamService {
 
     @Override
     public List<Team> findAll() {
-        return null;
+        return teamRepository.findAll();
     }
 
     @Override
-    public Team findById(Long aLong) {
-        return null;
+    public Team findById(Long id) {
+        return teamRepository.findById(id).orElseGet(Team::new);
     }
 
     @Override
     public Team save(Team object) {
-        return null;
+        return teamRepository.save(object);
     }
 
     @Override
     public void delete(Team object) {
-
+        teamRepository.delete(object);
     }
 
     @Override
-    public void deleteById(Long aLong) {
-
+    public void deleteById(Long id) {
+        teamRepository.deleteById(id);
     }
 }
