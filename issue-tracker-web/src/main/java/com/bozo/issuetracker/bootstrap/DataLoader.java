@@ -1,14 +1,12 @@
 package com.bozo.issuetracker.bootstrap;
 
-import com.bozo.issuetracker.model.Issue;
-import com.bozo.issuetracker.model.IssueComment;
-import com.bozo.issuetracker.model.User;
-import com.bozo.issuetracker.service.IssueCommentService;
-import com.bozo.issuetracker.service.IssueService;
-import com.bozo.issuetracker.service.UserService;
+import com.bozo.issuetracker.model.*;
+import com.bozo.issuetracker.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -17,6 +15,8 @@ public class DataLoader implements CommandLineRunner {
     private final UserService userService;
     private final IssueService issueService;
     private final IssueCommentService issueCommentService;
+    private final ProjectService projectService;
+    private final TeamService teamService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -53,7 +53,31 @@ public class DataLoader implements CommandLineRunner {
         IssueComment comment4 = IssueComment.builder().comment("comment 4").commentCreator(savedUser1).issue(savedUser1.getIssuesCreated().get(0)).build();
         savedUser1.getCommentsCreated().add(comment4);
 
-        userService.save(savedUser1);
-        userService.save(savedUser2);
+        Team team = Team.builder().teamName("team 1").build();
+
+        Team savedTeam = teamService.save(team);
+
+        savedTeam.setLeader(savedUser1);
+        savedTeam.setMembers(List.of(savedUser1, savedUser2));
+
+        savedUser1.setLeaderOfTeam(savedTeam);
+        savedUser1.setMemberOfTeam(savedTeam);
+
+        savedUser2.setMemberOfTeam(savedTeam);
+
+        Project project = Project.builder()
+                .projectName("project 1")
+                .assignedTeam(savedTeam)
+                .issues(List.of(
+                        savedUser1.getIssuesCreated().get(0),
+                        savedUser2.getIssuesCreated().get(0)))
+                .build();
+
+        savedUser1.getIssuesCreated().get(0).setProject(project);
+        savedUser2.getIssuesCreated().get(0).setProject(project);
+
+        savedTeam.setProjects(List.of(project));
+
+        teamService.save(savedTeam);
     }
 }
