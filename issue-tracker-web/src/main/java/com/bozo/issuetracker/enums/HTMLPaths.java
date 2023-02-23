@@ -8,7 +8,8 @@ public enum HTMLPaths {
     USER_LIST("user/userList"),
     USER("user/user"),
     ADD_EDIT_USER("user/addEditUser"),
-    PROJECT_LIST("project/projectList");
+    PROJECT_LIST("project/projectList"),
+    TEAM_LIST("team/teamList");
 
     private final String htmlPath;
 

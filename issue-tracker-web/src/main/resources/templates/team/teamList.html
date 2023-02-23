@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>List of teams</title>
+</head>
+<body>
+<div>
+    <table>
+        <tr>
+            <th>team name</th>
+            <th>team leader</th>
+            <th>number of members</th>
+            <th>number of projects</th>
+        </tr>
+        <tr th:each="team : ${teamList}">
+            <td th:text="${team.teamName}">team name</td>
+            <td th:text="${team.leader.userName}">leader name</td>
+            <td th:text="${team.members.size}">team name</td>
+            <td th:text="${team.projects.size}">team name</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
