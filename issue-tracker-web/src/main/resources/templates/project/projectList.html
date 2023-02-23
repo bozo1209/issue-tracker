@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>List of projects</title>
+</head>
+<body>
+<div>
+    <table>
+        <tr>
+            <th>project name</th>
+            <th>team name</th>
+            <th>number of issues</th>
+        </tr>
+        <tr th:each="project : ${projectList}">
+            <td th:text="${project.projectName}">project name</td>
+            <td th:text="${project.assignedTeam.teamName}">team name</td>
+            <td th:text="${project.issues.size}">name</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
