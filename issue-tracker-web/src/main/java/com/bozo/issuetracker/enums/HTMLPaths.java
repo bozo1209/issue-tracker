@@ -12,7 +12,8 @@ public enum HTMLPaths {
     PROJECT("project/project"),
     ADD_EDIT_PROJECT("project/addEditProject"),
     TEAM_LIST("team/teamList"),
-    TEAM("team/team");
+    TEAM("team/team"),
+    ADD_EDIT_TEAM("team/addEditTeam");
 
     private final String htmlPath;
 
