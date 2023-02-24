@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:with="text=${project['new']} ? 'Add Project' : 'Update Project'" th:text="${text}">Title</title>
+</head>
+<body>
+<form th:with="addorupdate=${project['new']} ? 'new' : ${project?.id} + '/edit'" th:action="@{/project/{l}(l=${addorupdate})}" th:object="${project}" method="post">
+    <div>
+        <label>project name</label>
+        <input type="text" th:field="*{projectName}">
+    </div>
+    <button type="submit" th:with="text=${project['new']} ? 'Add Project' : 'Update Project'" th:text="${text}">add</button>
+</form>
+</body>
+</html>

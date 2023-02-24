@@ -10,6 +10,7 @@ public enum HTMLPaths {
     ADD_EDIT_USER("user/addEditUser"),
     PROJECT_LIST("project/projectList"),
     PROJECT("project/project"),
+    ADD_EDIT_PROJECT("project/addEditProject"),
     TEAM_LIST("team/teamList"),
     TEAM("team/team");
 
