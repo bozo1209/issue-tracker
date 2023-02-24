@@ -9,7 +9,9 @@ public enum HTMLPaths {
     USER("user/user"),
     ADD_EDIT_USER("user/addEditUser"),
     PROJECT_LIST("project/projectList"),
-    TEAM_LIST("team/teamList");
+    PROJECT("project/project"),
+    TEAM_LIST("team/teamList"),
+    TEAM("team/team");
 
     private final String htmlPath;
 
