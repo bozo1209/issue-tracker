@@ -1,6 +1,8 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Project;
+import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,36 +26,59 @@ public class ProjectController {
 
     @GetMapping("/all")
     public String allProjectList(Model model){
-        return null;
+        model.addAttribute("projectList", projectService.findAll());
+        return HTMLPaths.PROJECT_LIST.getPath();
     }
 
     @GetMapping("/{projectId}")
     public String showProject(@PathVariable Long projectId, Model model){
-        return null;
+        model.addAttribute("project", projectService.findById(projectId));
+        return HTMLPaths.PROJECT.getPath();
     }
 
     @GetMapping("/new")
     public String addNewProject(Model model){
-        return null;
+        model.addAttribute("project", Project.builder().build());
+        return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
 
     @PostMapping("/new")
     public String processAddingProject(@Valid Project project, BindingResult result){
-        return null;
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_PROJECT.getPath();
+        }
+
+        Project projectById = projectService.findById(1L);
+        project.setAssignedTeam(projectById.getAssignedTeam());
+        projectById.getAssignedTeam().getProjects().add(project);
+        Project savedProject = projectService.save(project);
+        return "redirect:/project/" + savedProject.getId();
     }
 
     @GetMapping("/{projectId}/edit")
     public String editProject(@PathVariable Long projectId, Model model){
-        return null;
+        model.addAttribute("project", projectService.findById(projectId));
+        return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
 
     @PostMapping("/{projectId}/edit")
     public String processEditingProject(@Valid Project project, @PathVariable Long projectId, BindingResult result){
-        return null;
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_PROJECT.getPath();
+        }
+        project.setId(projectId);
+        Project projectById = projectService.findById(1L);
+        project.setAssignedTeam(projectById.getAssignedTeam());
+        project.setIssues(projectById.getIssues());
+        Project savedProject = projectService.save(project);
+        return "redirect:/project/" + savedProject.getId();
     }
 
     @GetMapping("/{projectId}/delete")
     public String deleteProject(@PathVariable Long projectId){
-        return null;
+        Project projectById = projectService.findById(projectId);
+        projectById.getAssignedTeam().getProjects().remove(projectById);
+        projectService.deleteById(projectId);
+        return "redirect:/project/all";
     }
 }

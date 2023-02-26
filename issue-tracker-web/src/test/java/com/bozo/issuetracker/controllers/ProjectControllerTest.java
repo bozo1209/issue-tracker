@@ -2,6 +2,7 @@ package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Project;
+import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class ProjectControllerTest {
 
     @BeforeEach
     void setUp() {
-        returnedProject = Project.builder().id(1L).build();
+        returnedProject = Project.builder().id(1L).assignedTeam(Team.builder().build()).build();
         returnedProjectList = List.of(returnedProject);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -82,6 +83,7 @@ class ProjectControllerTest {
     void processAddingProject() throws Exception {
         Project project = Project.builder().id(2L).build();
         when(projectService.save(any())).thenReturn(project);
+        when(projectService.findById(anyLong())).thenReturn(returnedProject);
 
         mockMvc.perform(post(PROJECT_PATH + "/new"))
                 .andExpect(status().is3xxRedirection())
@@ -104,6 +106,7 @@ class ProjectControllerTest {
 
     @Test
     void processEditingProject() throws Exception {
+        when(projectService.findById(anyLong())).thenReturn(returnedProject);
         when(projectService.save(any())).thenReturn(returnedProject);
 
         mockMvc.perform(post(PROJECT_PATH + "/{projectId}/edit", returnedProject.getId()))
@@ -115,6 +118,8 @@ class ProjectControllerTest {
 
     @Test
     void deleteProject() throws Exception {
+        when(projectService.findById(anyLong())).thenReturn(returnedProject);
+
         mockMvc.perform(get(PROJECT_PATH + "/{projectId}/delete", returnedProject.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/all"));
