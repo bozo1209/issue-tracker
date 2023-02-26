@@ -9,10 +9,10 @@
     <h2 th:text="${project.projectName}"></h2>
 </div>
 <div>
-    <h3 th:text="'team responsible ${project.assignedTeam.teamName}'"></h3>
+    <h3 th:text="'team responsible __${project.assignedTeam.teamName}__'"></h3>
 </div>
 <div>
-    <h3 th:text="'number of issues: ${project.issues.size}'"></h3>
+    <h3 th:text="'number of issues: __${project.issues.size}__'"></h3>
     <h3>list of issues:</h3>
     <ul>
         <li th:each="issue : ${project.issues}" th:text="${issue.description}">el</li>

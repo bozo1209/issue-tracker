@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -68,7 +69,7 @@ public class DataLoader implements CommandLineRunner {
         Project project = Project.builder()
                 .projectName("project 1")
                 .assignedTeam(savedTeam)
-                .issues(List.of(
+                .issues(Set.of(
                         savedUser1.getIssuesCreated().get(0),
                         savedUser2.getIssuesCreated().get(0)))
                 .build();
