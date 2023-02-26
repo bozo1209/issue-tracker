@@ -40,11 +40,12 @@ public class IssueController {
     @GetMapping("/new")
     public String addNewIssue(Model model){
         model.addAttribute("issue", Issue.builder().build());
+        model.addAttribute("issueComment", IssueComment.builder().build());
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
 
     @PostMapping("/new")
-    public String processAddingIssue(@Valid Issue issue, BindingResult result){
+    public String processAddingIssue(@Valid Issue issue, @Valid IssueComment issueComment, BindingResult result){
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
@@ -52,13 +53,31 @@ public class IssueController {
         Issue issueById = issueService.findById(1L);
         issue.setIssueCreator(issueById.getIssueCreator());
         issueById.getIssueCreator().getIssuesObserve().add(issue);
-        Issue savedIssue = issueService.save(issue);
+//        issue.getComments().add(IssueComment.builder().comment("test").build());
+//        Issue savedIssue = issueService.save(issue);
+//        IssueComment test = IssueComment.builder().comment("test").issue(issue).commentCreator(issueById.getIssueCreator()).build();
+        if (!issueComment.getComment().equalsIgnoreCase("")){
+            issueComment.setCommentCreator(issueById.getIssueCreator());
+            issueById.getIssueCreator().getCommentsCreated().add(issueComment);
+            issueComment.setIssue(issue);
+            issue.getComments().add(issueComment);
+        }
+//        issueComment.setCommentCreator(issueById.getIssueCreator());
+//        issueById.getIssueCreator().getCommentsCreated().add(issueComment);
+//        issueComment.setIssue(issue);
+//        issue.getComments().add(issueComment);
+//        issueById.getIssueCreator().getCommentsCreated().add(test);
+//        issue.getComments().add(test);
+        issue.setProject(issueById.getProject());
+        issueById.getProject().getIssues().add(issue);
+        Issue  savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
 
     @GetMapping("/{id}/edit")
     public String editIssue(@PathVariable Long id, Model model){
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("issueComment", IssueComment.builder().build());
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
 
@@ -71,6 +90,7 @@ public class IssueController {
         Issue issueById = issueService.findById(id);
         issue.setIssueCreator(issueById.getIssueCreator());
         issue.setComments(issueById.getComments());
+        issue.setProject(issueById.getProject());
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
