@@ -65,7 +65,7 @@ class IssueControllerTest {
     void showIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(get(ISSUE_PATH +"/{id}", returnedIssue.getId()))
+        mockMvc.perform(get(ISSUE_PATH +"/{issueId}", returnedIssue.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ISSUE.getPath()))
                 .andExpect(model().attributeExists("issue"));
@@ -98,7 +98,7 @@ class IssueControllerTest {
     void editIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(get(ISSUE_PATH +"/{id}/edit", returnedIssue.getId()))
+        mockMvc.perform(get(ISSUE_PATH +"/{issueId}/edit", returnedIssue.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
                 .andExpect(model().attribute("issue", returnedIssue));
@@ -111,7 +111,7 @@ class IssueControllerTest {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
         when(issueService.save(any())).thenReturn(returnedIssue);
 
-        mockMvc.perform(post(ISSUE_PATH +"/{id}/edit", returnedIssue.getId()))
+        mockMvc.perform(post(ISSUE_PATH +"/{issueId}/edit", returnedIssue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + returnedIssue.getId()));
 
@@ -122,7 +122,7 @@ class IssueControllerTest {
     void deleteIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
-        mockMvc.perform(get(ISSUE_PATH +"/{id}/delete", returnedIssue.getId()))
+        mockMvc.perform(get(ISSUE_PATH +"/{issueId}/delete", returnedIssue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/all"));
 

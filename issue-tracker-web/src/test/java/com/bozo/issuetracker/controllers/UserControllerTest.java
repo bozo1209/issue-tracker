@@ -62,7 +62,7 @@ class UserControllerTest {
     void showUserById() throws Exception {
         when(userService.findById(anyLong())).thenReturn(returnedUser);
 
-        mockMvc.perform(get(USER_PATH + "/{id}", returnedUser.getId()))
+        mockMvc.perform(get(USER_PATH + "/{userId}", returnedUser.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.USER.getPath()))
                 .andExpect(model().attributeExists("user"));
@@ -94,7 +94,7 @@ class UserControllerTest {
     void editUser() throws Exception {
         when(userService.findById(anyLong())).thenReturn(returnedUser);
 
-        mockMvc.perform(get(USER_PATH + "/{id}/edit", returnedUser.getId()))
+        mockMvc.perform(get(USER_PATH + "/{userId}/edit", returnedUser.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_USER.getPath()))
                 .andExpect(model().attributeExists("user"));
@@ -107,7 +107,7 @@ class UserControllerTest {
         when(userService.findById(anyLong())).thenReturn(returnedUser);
         when(userService.save(any())).thenReturn(returnedUser);
 
-        mockMvc.perform(post(USER_PATH + "/{id}/edit", returnedUser.getId()))
+        mockMvc.perform(post(USER_PATH + "/{userId}/edit", returnedUser.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user/" + returnedUser.getId()));
 
@@ -118,7 +118,7 @@ class UserControllerTest {
     void deleteUser() throws Exception {
         when(userService.findById(anyLong())).thenReturn(returnedUser);
 
-        mockMvc.perform(get(USER_PATH + "/{id}/delete", returnedUser.getId()))
+        mockMvc.perform(get(USER_PATH + "/{userId}/delete", returnedUser.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user/all"));
 

@@ -30,9 +30,9 @@ public class IssueController {
         return HTMLPaths.ISSUE_LIST.getPath();
     }
 
-    @GetMapping("/{id}")
-    public String showIssue(@PathVariable Long id, Model model){
-        model.addAttribute("issue", issueService.findById(id));
+    @GetMapping("/{issueId}")
+    public String showIssue(@PathVariable Long issueId, Model model){
+        model.addAttribute("issue", issueService.findById(issueId));
         model.addAttribute("comment", IssueComment.builder().build());
         return HTMLPaths.ISSUE.getPath();
     }
@@ -56,30 +56,30 @@ public class IssueController {
         return "redirect:/issue/" + savedIssue.getId();
     }
 
-    @GetMapping("/{id}/edit")
-    public String editIssue(@PathVariable Long id, Model model){
-        model.addAttribute("issue", issueService.findById(id));
+    @GetMapping("/{issueId}/edit")
+    public String editIssue(@PathVariable Long issueId, Model model){
+        model.addAttribute("issue", issueService.findById(issueId));
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
 
-    @PostMapping("/{id}/edit")
-    public String processEditingIssue(@Valid Issue issue, @PathVariable Long id, BindingResult result){
+    @PostMapping("/{issueId}/edit")
+    public String processEditingIssue(@Valid Issue issue, @PathVariable Long issueId, BindingResult result){
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
-        issue.setId(id);
-        Issue issueById = issueService.findById(id);
+        issue.setId(issueId);
+        Issue issueById = issueService.findById(issueId);
         issue.setIssueCreator(issueById.getIssueCreator());
         issue.setComments(issueById.getComments());
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
 
-    @GetMapping("/{id}/delete")
-    public String deleteIssue(@PathVariable Long id){
-        Issue issueById = issueService.findById(id);
+    @GetMapping("/{issueId}/delete")
+    public String deleteIssue(@PathVariable Long issueId){
+        Issue issueById = issueService.findById(issueId);
         issueById.getIssueCreator().getIssuesObserve().remove(issueById);
-        issueService.deleteById(id);
+        issueService.deleteById(issueId);
         return "redirect:/issue/all";
     }
 }
