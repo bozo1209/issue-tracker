@@ -28,9 +28,9 @@ public class UserController {
         return HTMLPaths.USER_LIST.getPath();
     }
 
-    @GetMapping("/{id}")
-    public String showUserById(@PathVariable Long id, Model model){
-        model.addAttribute("user", userService.findById(id));
+    @GetMapping("/{userId}")
+    public String showUserById(@PathVariable Long userId, Model model){
+        model.addAttribute("user", userService.findById(userId));
         return HTMLPaths.USER.getPath();
     }
 
@@ -49,29 +49,29 @@ public class UserController {
         return "redirect:/user/" + savedUser.getId();
     }
 
-    @GetMapping("/{id}/edit")
-    public String editUser(@PathVariable Long id, Model model){
-        model.addAttribute("user", userService.findById(id));
+    @GetMapping("/{userId}/edit")
+    public String editUser(@PathVariable Long userId, Model model){
+        model.addAttribute("user", userService.findById(userId));
         return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 
-    @PostMapping("/{id}/edit")
-    public String processEditingUser(@Valid User user, @PathVariable Long id, BindingResult result){
+    @PostMapping("/{userId}/edit")
+    public String processEditingUser(@Valid User user, @PathVariable Long userId, BindingResult result){
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_USER.getPath();
         }
-        User userById = userService.findById(id);
+        User userById = userService.findById(userId);
         userById.setUserName(user.getUserName());
         User savedUser = userService.save(userById);
         return "redirect:/user/" + savedUser.getId();
     }
 
-    @GetMapping("/{id}/delete")
-    public String deleteUser(@PathVariable Long id){
-        User userById = userService.findById(id);
+    @GetMapping("/{userId}/delete")
+    public String deleteUser(@PathVariable Long userId){
+        User userById = userService.findById(userId);
         userById.getIssuesCreated().forEach(issue -> issue.setIssueCreator(null));
         userById.getCommentsCreated().forEach(comment -> comment.setCommentCreator(null));
-        userService.deleteById(id);
+        userService.deleteById(userId);
         return "redirect:/user/all";
     }
 }
