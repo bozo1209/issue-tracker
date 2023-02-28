@@ -1,5 +1,6 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.TeamService;
 import jakarta.validation.Valid;
@@ -25,34 +26,56 @@ public class TeamController {
 
     @GetMapping("/all")
     public String allTeamList(Model model){
-        return null;
+        model.addAttribute("teamList", teamService.findAll());
+        return HTMLPaths.TEAM_LIST.getPath();
     }
 
     @GetMapping("/{teamId}")
     public String showTeam(@PathVariable Long teamId, Model model){
-        return null;
+        model.addAttribute("team", teamService.findById(teamId));
+        return HTMLPaths.TEAM.getPath();
     }
+
     @GetMapping("/new")
     public String addNewTeam(Model model){
-        return null;
+        model.addAttribute("team", Team.builder().build());
+        return HTMLPaths.ADD_EDIT_TEAM.getPath();
     }
 
     @PostMapping("/new")
     public String processAddingTeam(@Valid Team team, BindingResult result){
-        return null;
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_TEAM.getPath();
+        }
+
+        Team savedTeam = teamService.save(team);
+        return "redirect:/team/" + savedTeam.getId();
     }
 
     @GetMapping("/{teamId}/edit")
     public String editTeam(@PathVariable Long teamId, Model model){
-        return null;
+        model.addAttribute("team", teamService.findById(teamId));
+        return HTMLPaths.ADD_EDIT_TEAM.getPath();
     }
+
     @PostMapping("/{teamId}/edit")
     public String processEditingTeam(@Valid Team team, @PathVariable Long teamId, BindingResult result){
-        return null;
+        if (result.hasErrors()){
+            return HTMLPaths.ADD_EDIT_TEAM.getPath();
+        }
+
+        team.setId(teamId);
+        Team teamById = teamService.findById(teamId);
+        team.setProjects(teamById.getProjects());
+        team.setMembers(teamById.getMembers());
+        team.setLeader(team.getLeader());
+        Team savedTeam = teamService.save(team);
+        return "redirect:/team/" + savedTeam.getId();
     }
 
     @GetMapping("/{teamId}/delete")
     public String deleteTeam(@PathVariable Long teamId){
-        return null;
+        teamService.deleteById(teamId);
+        return "redirect:/team/all";
     }
 }
