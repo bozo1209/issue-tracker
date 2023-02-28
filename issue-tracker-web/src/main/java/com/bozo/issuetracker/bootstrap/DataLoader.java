@@ -59,7 +59,7 @@ public class DataLoader implements CommandLineRunner {
         Team savedTeam = teamService.save(team);
 
         savedTeam.setLeader(savedUser1);
-        savedTeam.setMembers(List.of(savedUser1, savedUser2));
+        savedTeam.setMembers(Set.of(savedUser1, savedUser2));
 
         savedUser1.setLeaderOfTeam(savedTeam);
         savedUser1.setMemberOfTeam(savedTeam);
@@ -77,7 +77,7 @@ public class DataLoader implements CommandLineRunner {
         savedUser1.getIssuesCreated().get(0).setProject(project);
         savedUser2.getIssuesCreated().get(0).setProject(project);
 
-        savedTeam.setProjects(List.of(project));
+        savedTeam.setProjects(Set.of(project));
 
         teamService.save(savedTeam);
     }
