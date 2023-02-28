@@ -9,7 +9,7 @@
     <h2 th:text="${team.teamName}"></h2>
 </div>
 <div>
-    <h3 th:text="'team leader: ${team.leader.userName}'"></h3>
+    <h3 th:text="'team leader: __${team.leader.userName}__'"></h3>
     <h3>team members:</h3>
     <ul>
         <li th:each="member : ${team.members}" th:text="${member.userName}">el</li>
