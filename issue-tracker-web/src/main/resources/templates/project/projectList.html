@@ -6,6 +6,9 @@
 </head>
 <body>
 <div>
+    <a th:href="@{/project/new}" th:text="add"></a>
+</div>
+<div>
     <table>
         <tr>
             <th>project name</th>
@@ -15,7 +18,7 @@
         </tr>
         <tr th:each="project : ${projectList}">
             <td th:text="${project.projectName}">project name</td>
-            <td th:text="${project.assignedTeam.teamName}">team name</td>
+            <td th:text="${project.assignedTeam?.teamName}">team name</td>
             <td th:text="${project.issues.size}">name</td>
             <td><a th:href="@{/project/{id}(id=${project.id})}" th:text="'go to project'"></a></td>
             <td><a th:href="@{/project/{id}/edit(id=${project.id})}" th:text="edit"></a></td>
