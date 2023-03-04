@@ -6,6 +6,8 @@
 </head>
 <body>
 <div>
+    <a th:href="@{/team/new}" th:text="add"></a>
+</div><div>
     <table>
         <tr>
             <th>team name</th>
@@ -16,7 +18,7 @@
         </tr>
         <tr th:each="team : ${teamList}">
             <td th:text="${team.teamName}">team name</td>
-            <td th:text="${team.leader.userName}">leader name</td>
+            <td th:text="${team.leader?.userName}">leader name</td>
             <td th:text="${team.members.size}">team name</td>
             <td th:text="${team.projects.size}">team name</td>
             <td><a th:href="@{/team/{id}(id=${team.id})}" th:text="'go to team'"></a></td>

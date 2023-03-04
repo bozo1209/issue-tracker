@@ -6,19 +6,28 @@
 </head>
 <body>
 <div>
+    <a th:href="@{/team/new}" th:text="'add new'"></a>
+</div>
+<div>
+    <a th:href="@{/team/{id}/edit(id=${team.id})}" th:text="edit"></a>
+</div>
+<div>
+    <a th:href="@{/team/{id}/delete(id=${team.id})}" th:text="delete"></a>
+</div>
+<div>
     <h2 th:text="${team.teamName}"></h2>
 </div>
 <div>
-    <h3 th:text="'team leader: __${team.leader.userName}__'"></h3>
+    <h3 th:text="'team leader: __${team.leader?.userName}__'"></h3>
     <h3>team members:</h3>
     <ul>
-        <li th:each="member : ${team.members}" th:text="${member.userName}">el</li>
+        <li th:each="member : ${team.members}" th:text="${member?.userName}">el</li>
     </ul>
 </div>
 <div>
     <h3>list of projects:</h3>
     <ul>
-        <li th:each="project : ${team.projects}" th:text="${project.projectName}">el</li>
+        <li th:each="project : ${team.projects}" th:text="${project?.projectName}">el</li>
     </ul>
 </div>
 </body>
