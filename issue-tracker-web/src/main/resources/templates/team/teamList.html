@@ -12,12 +12,16 @@
             <th>team leader</th>
             <th>number of members</th>
             <th>number of projects</th>
+            <th>link</th>
         </tr>
         <tr th:each="team : ${teamList}">
             <td th:text="${team.teamName}">team name</td>
             <td th:text="${team.leader.userName}">leader name</td>
             <td th:text="${team.members.size}">team name</td>
             <td th:text="${team.projects.size}">team name</td>
+            <td><a th:href="@{/team/{id}(id=${team.id})}" th:text="'go to team'"></a></td>
+            <td><a th:href="@{/team/{id}/edit(id=${team.id})}" th:text="edit"></a></td>
+            <td><a th:href="@{/team/{id}/delete(id=${team.id})}" th:text="delete"></a></td>
         </tr>
     </table>
 </div>
