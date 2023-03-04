@@ -11,11 +11,15 @@
             <th>project name</th>
             <th>team name</th>
             <th>number of issues</th>
+            <th>link</th>
         </tr>
         <tr th:each="project : ${projectList}">
             <td th:text="${project.projectName}">project name</td>
             <td th:text="${project.assignedTeam.teamName}">team name</td>
             <td th:text="${project.issues.size}">name</td>
+            <td><a th:href="@{/project/{id}(id=${project.id})}" th:text="'go to project'"></a></td>
+            <td><a th:href="@{/project/{id}/edit(id=${project.id})}" th:text="edit"></a></td>
+            <td><a th:href="@{/project/{id}/delete(id=${project.id})}" th:text="delete"></a></td>
         </tr>
     </table>
 </div>
