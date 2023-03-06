@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@PreAuthorize("hasRole('ROLE_ANONYMOUS')")
 public class IndexController {
 
     @GetMapping({"/", "/index", "/index.html"})

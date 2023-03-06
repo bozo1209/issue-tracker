@@ -19,7 +19,7 @@ public class ApplicationSecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception{
-        http.anonymous().authorities("ROLE_" + UserRoles.ANONYMOUS.name());
+        http.authorizeHttpRequests(auth -> auth.requestMatchers("/").permitAll());
         http.formLogin();
         return http.build();
     }
