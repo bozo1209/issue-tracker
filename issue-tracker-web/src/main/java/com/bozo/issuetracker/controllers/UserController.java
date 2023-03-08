@@ -1,11 +1,11 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 @RequestMapping("/user")
 @Controller
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorizeRoleAdmin
 @AllArgsConstructor
 public class UserController {
 
