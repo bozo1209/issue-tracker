@@ -25,14 +25,14 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadDate(){
-        User user1 = User.builder().userName("user1").build();
+        User user1 = User.builder().userName("user1").password("user1").build();
 
         Issue issue1 = Issue.builder().description("issue 1").issueCreator(user1).build();
 
         user1.getIssuesCreated().add(issue1);
         user1.getIssuesObserve().add(issue1);
 
-        User user2 = User.builder().userName("user2").build();
+        User user2 = User.builder().userName("user2").password("user1").build();
         Issue issue2 = Issue.builder().description("issue 2").issueCreator(user2).build();
         user2.getIssuesCreated().add(issue2);
         user2.getIssuesObserve().add(issue2);
