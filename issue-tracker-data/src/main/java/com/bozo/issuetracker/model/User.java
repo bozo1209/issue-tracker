@@ -45,9 +45,7 @@ public class User extends BaseEntity {
     private UserRoles role;
 
     @Size(min = 5)
-    @Column(name = "password"
-//            , nullable = false
-    )
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Builder
