@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.config;
 
 import com.bozo.issuetracker.enums.UserRoles;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,6 +25,7 @@ public class ApplicationSecurityConfig {
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated());
         http.formLogin();
+        http.csrf().ignoringRequestMatchers(PathRequest.toH2Console()).and().headers().frameOptions().sameOrigin(); // allow opening h2-console, fo dev purpose only
         return http.build();
     }
 
