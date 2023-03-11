@@ -19,12 +19,6 @@
     <dependencies>
         <dependency>
             <groupId>com.bozo</groupId>
-            <artifactId>issue-tracker-data</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.bozo</groupId>
             <artifactId>issue-tracker-security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
