@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers.security;
 
 import com.bozo.issuetracker.config.ApplicationSecurityConfig;
+import com.bozo.issuetracker.config.PasswordConfig;
 import com.bozo.issuetracker.controllers.IndexController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(ApplicationSecurityConfig.class)
+@Import({ApplicationSecurityConfig.class, PasswordConfig.class})
 @WebMvcTest(controllers = IndexController.class)
 class IndexControllerSecurityTest {
 
