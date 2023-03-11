@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.*;
@@ -13,7 +14,7 @@ import java.util.*;
 @Table(name = "app_user")
 public class User extends BaseEntity {
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String userName;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "issueCreator")
@@ -37,6 +38,12 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "member_of_team_id")
     private Team memberOfTeam;
+
+    @Size(min = 5)
+    @Column(name = "password"
+//            , nullable = false
+    )
+    private String password;
 
     @Builder
     public User(Long id, String userName, List<Issue> issuesCreated, Set<Issue> issuesObserve, List<IssueComment> commentsCreated) {
