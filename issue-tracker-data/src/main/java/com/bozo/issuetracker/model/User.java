@@ -1,5 +1,6 @@
 package com.bozo.issuetracker.model;
 
+import com.bozo.issuetracker.enums.UserRoles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -39,6 +40,10 @@ public class User extends BaseEntity {
     @JoinColumn(name = "member_of_team_id")
     private Team memberOfTeam;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private UserRoles role;
+
     @Size(min = 5)
     @Column(name = "password"
 //            , nullable = false
@@ -46,11 +51,23 @@ public class User extends BaseEntity {
     private String password;
 
     @Builder
-    public User(Long id, String userName, List<Issue> issuesCreated, Set<Issue> issuesObserve, List<IssueComment> commentsCreated) {
+    public User(Long id,
+                String userName,
+                List<Issue> issuesCreated,
+                Set<Issue> issuesObserve,
+                List<IssueComment> commentsCreated,
+                Team leaderOfTeam,
+                Team memberOfTeam,
+                UserRoles role,
+                String password) {
         super(id);
         this.userName = userName;
         this.issuesCreated = Optional.ofNullable(issuesCreated).orElseGet(this::getIssuesCreated);
         this.issuesObserve = Optional.ofNullable(issuesObserve).orElseGet(this::getIssuesObserve);
         this.commentsCreated = Optional.ofNullable(commentsCreated).orElseGet(this::getCommentsCreated);
+        this.leaderOfTeam = leaderOfTeam;
+        this.memberOfTeam = memberOfTeam;
+        this.role = role;
+        this.password = password;
     }
 }
