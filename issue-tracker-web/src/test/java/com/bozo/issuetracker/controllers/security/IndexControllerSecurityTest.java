@@ -3,6 +3,7 @@ package com.bozo.issuetracker.controllers.security;
 import com.bozo.issuetracker.config.ApplicationSecurityConfig;
 import com.bozo.issuetracker.config.PasswordConfig;
 import com.bozo.issuetracker.controllers.IndexController;
+import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.repository.UserRepository;
 import com.bozo.issuetracker.service.UserService;
@@ -22,11 +23,15 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 //@Import({ApplicationSecurityConfig.class, PasswordConfig.class, ApplicationUserDetailsService.class, UserSDJpaService.class, UserRepository.class})
 //@WebMvcTest(controllers = IndexController.class)
-@SpringBootTest
-class IndexControllerSecurityITest extends BaseIT{
+//@SpringBootTest
+@Import(ApplicationSecurityTestConfig.class)
+@WebMvcTest(controllers = IndexController.class)
+class IndexControllerSecurityTest
+//        extends BaseIT
+{
 
-//    @Autowired
-//    private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
     @WithMockUser(roles = "USER")
     @Test
