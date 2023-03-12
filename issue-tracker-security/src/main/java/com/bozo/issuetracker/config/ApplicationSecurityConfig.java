@@ -1,7 +1,6 @@
 package com.bozo.issuetracker.config;
 
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
-import com.bozo.issuetracker.enums.UserRoles;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +10,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @AllArgsConstructor
@@ -46,20 +41,4 @@ public class ApplicationSecurityConfig {
         return provider;
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        UserDetails user1 = User.builder()
-//                .username("user1")
-//                .password(passwordConfig.passwordEncoder().encode("user1"))
-//                .roles(UserRoles.ADMIN.name())
-//                .build();
-//
-//        UserDetails user2 = User.builder()
-//                .username("user2")
-//                .password(passwordConfig.passwordEncoder().encode("user2"))
-//                .roles(UserRoles.USER.name())
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user1, user2);
-//    }
 }
