@@ -27,7 +27,7 @@ public class ApplicationSecurityConfig {
     private final ApplicationUserDetailsService applicationUserDetailsService;
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception{
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth ->
                 auth
                         .requestMatchers("/").permitAll()
