@@ -1,6 +1,8 @@
 package com.bozo.issuetracker.controllers.security;
 
 import com.bozo.issuetracker.controllers.UserController;
+import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
+import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.springdatajpa.UserSDJpaService;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,16 +30,16 @@ public class UserControllerSecurityTest {
     @MockBean
     private UserSDJpaService userService;
 
-    private String USER_PATH = "/user";
+    private final String USER_PATH = "/user";
 
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUserRoleAdmin
     @Test
     public void allUserListAdmin() throws Exception {
         mockMvc.perform(get(USER_PATH +"/all"))
                 .andExpect(status().isOk());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Test
     public void allUserListUser() throws Exception {
         mockMvc.perform(get(USER_PATH +"/all"))
@@ -51,7 +52,7 @@ public class UserControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUserRoleAdmin
     @Test
     public void showUserByIdAdmin() throws Exception {
         when(userService.findById(anyLong())).thenReturn(User.builder().build());
@@ -59,7 +60,7 @@ public class UserControllerSecurityTest {
                 .andExpect(status().isOk());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Test
     public void showUserByIdUser() throws Exception {
         when(userService.findById(anyLong())).thenReturn(User.builder().build());
@@ -73,14 +74,14 @@ public class UserControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUserRoleAdmin
     @Test
     public void addNewUserAdmin() throws Exception {
         mockMvc.perform(get(USER_PATH + "/new"))
                 .andExpect(status().isOk());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Test
     public void addNewUserUser() throws Exception {
         mockMvc.perform(get(USER_PATH + "/new"))
@@ -93,7 +94,7 @@ public class UserControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUserRoleAdmin
     @Test
     public void processAddingUserAdmin() throws Exception {
         when(userService.save(any())).thenReturn(User.builder().id(1L).build());
@@ -102,7 +103,7 @@ public class UserControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Test
     public void processAddingUserUser() throws Exception {
         mockMvc.perform(post(USER_PATH + "/new"))
@@ -119,7 +120,7 @@ public class UserControllerSecurityTest {
         verifyNoInteractions(userService);
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUserRoleAdmin
     @Test
     public void editUserAdmin() throws Exception {
         User user2 = User.builder().id(2L).build();
@@ -152,7 +153,7 @@ public class UserControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUserRoleAdmin
     @Test
     public void processEditingUserAdmin() throws Exception {
         User user2 = User.builder().id(2L).build();
@@ -191,7 +192,7 @@ public class UserControllerSecurityTest {
         verify(userService, times(0)).save(any());
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUserRoleAdmin
     @Test
     public void deleteUserAmin() throws Exception {
         User user1 = User.builder().id(1L).build();
@@ -200,7 +201,7 @@ public class UserControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Test
     public void deleteUserUser() throws Exception {
         mockMvc.perform(get(USER_PATH + "/1/delete"))
