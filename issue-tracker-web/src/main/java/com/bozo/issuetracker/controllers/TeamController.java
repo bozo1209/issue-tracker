@@ -25,25 +25,25 @@ public class TeamController {
     public void setAllowedFields(WebDataBinder dataBinder){
         dataBinder.setDisallowedFields("id");
     }
-
+// admin + user
     @GetMapping("/all")
     public String allTeamList(Model model){
         model.addAttribute("teamList", teamService.findAll());
         return HTMLPaths.TEAM_LIST.getPath();
     }
-
+    // admin + user
     @GetMapping("/{teamId}")
     public String showTeam(@PathVariable Long teamId, Model model){
         model.addAttribute("team", teamService.findById(teamId));
         return HTMLPaths.TEAM.getPath();
     }
-
+// admin
     @GetMapping("/new")
     public String addNewTeam(Model model){
         model.addAttribute("team", Team.builder().build());
         return HTMLPaths.ADD_EDIT_TEAM.getPath();
     }
-
+// admin
     @PostMapping("/new")
     public String processAddingTeam(@Valid Team team, BindingResult result){
         if (result.hasErrors()){
@@ -53,13 +53,13 @@ public class TeamController {
         Team savedTeam = teamService.save(team);
         return "redirect:/team/" + savedTeam.getId();
     }
-
+// admin
     @GetMapping("/{teamId}/edit")
     public String editTeam(@PathVariable Long teamId, Model model){
         model.addAttribute("team", teamService.findById(teamId));
         return HTMLPaths.ADD_EDIT_TEAM.getPath();
     }
-
+// admin
     @PostMapping("/{teamId}/edit")
     public String processEditingTeam(@Valid Team team, @PathVariable Long teamId, BindingResult result){
         if (result.hasErrors()){
@@ -74,7 +74,7 @@ public class TeamController {
         Team savedTeam = teamService.save(team);
         return "redirect:/team/" + savedTeam.getId();
     }
-
+// admin
     @GetMapping("/{teamId}/delete")
     public String deleteTeam(@PathVariable Long teamId){
         teamService.deleteById(teamId);
