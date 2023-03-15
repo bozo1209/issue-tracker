@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
+import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.TeamService;
@@ -21,29 +22,34 @@ public class TeamController {
 
     private final TeamService teamService;
 
+    @PreAuthorizeRoleAdminOrRoleUser
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder){
         dataBinder.setDisallowedFields("id");
     }
-
+// admin + user
+    @PreAuthorizeRoleAdminOrRoleUser
     @GetMapping("/all")
     public String allTeamList(Model model){
         model.addAttribute("teamList", teamService.findAll());
         return HTMLPaths.TEAM_LIST.getPath();
     }
-
+    // admin + user
+    @PreAuthorizeRoleAdminOrRoleUser
     @GetMapping("/{teamId}")
     public String showTeam(@PathVariable Long teamId, Model model){
         model.addAttribute("team", teamService.findById(teamId));
         return HTMLPaths.TEAM.getPath();
     }
-
+// admin
+    @PreAuthorizeRoleAdmin
     @GetMapping("/new")
     public String addNewTeam(Model model){
         model.addAttribute("team", Team.builder().build());
         return HTMLPaths.ADD_EDIT_TEAM.getPath();
     }
-
+// admin
+    @PreAuthorizeRoleAdmin
     @PostMapping("/new")
     public String processAddingTeam(@Valid Team team, BindingResult result){
         if (result.hasErrors()){
@@ -53,13 +59,15 @@ public class TeamController {
         Team savedTeam = teamService.save(team);
         return "redirect:/team/" + savedTeam.getId();
     }
-
+// admin
+    @PreAuthorizeRoleAdmin
     @GetMapping("/{teamId}/edit")
     public String editTeam(@PathVariable Long teamId, Model model){
         model.addAttribute("team", teamService.findById(teamId));
         return HTMLPaths.ADD_EDIT_TEAM.getPath();
     }
-
+// admin
+    @PreAuthorizeRoleAdmin
     @PostMapping("/{teamId}/edit")
     public String processEditingTeam(@Valid Team team, @PathVariable Long teamId, BindingResult result){
         if (result.hasErrors()){
@@ -74,7 +82,8 @@ public class TeamController {
         Team savedTeam = teamService.save(team);
         return "redirect:/team/" + savedTeam.getId();
     }
-
+// admin
+    @PreAuthorizeRoleAdmin
     @GetMapping("/{teamId}/delete")
     public String deleteTeam(@PathVariable Long teamId){
         teamService.deleteById(teamId);
