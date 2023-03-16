@@ -19,30 +19,30 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
-
+// admin + user
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder){
         dataBinder.setDisallowedFields("id");
     }
-
+// admin + user
     @GetMapping("/all")
     public String allProjectList(Model model){
         model.addAttribute("projectList", projectService.findAll());
         return HTMLPaths.PROJECT_LIST.getPath();
     }
-
+// admin + user
     @GetMapping("/{projectId}")
     public String showProject(@PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
         return HTMLPaths.PROJECT.getPath();
     }
-
+// admin
     @GetMapping("/new")
     public String addNewProject(Model model){
         model.addAttribute("project", Project.builder().build());
         return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
-
+// admin
     @PostMapping("/new")
     public String processAddingProject(@Valid Project project, BindingResult result){
         if (result.hasErrors()){
@@ -55,13 +55,13 @@ public class ProjectController {
         Project savedProject = projectService.save(project);
         return "redirect:/project/" + savedProject.getId();
     }
-
+// admin
     @GetMapping("/{projectId}/edit")
     public String editProject(@PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
         return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
-
+// admin
     @PostMapping("/{projectId}/edit")
     public String processEditingProject(@Valid Project project, @PathVariable Long projectId, BindingResult result){
         if (result.hasErrors()){
@@ -74,7 +74,7 @@ public class ProjectController {
         Project savedProject = projectService.save(project);
         return "redirect:/project/" + savedProject.getId();
     }
-
+// admin
     @GetMapping("/{projectId}/delete")
     public String deleteProject(@PathVariable Long projectId){
         Project projectById = projectService.findById(projectId);
