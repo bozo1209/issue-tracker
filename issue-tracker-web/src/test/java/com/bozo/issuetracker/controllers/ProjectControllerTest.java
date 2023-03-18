@@ -1,5 +1,6 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.model.Team;
@@ -26,8 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class ProjectControllerTest {
 
-    String PROJECT_PATH = "/project";
-
     @Mock
     ProjectService projectService;
 
@@ -51,7 +50,7 @@ class ProjectControllerTest {
     void allProjectList() throws Exception {
         when(projectService.findAll()).thenReturn(returnedProjectList);
 
-        mockMvc.perform(get(PROJECT_PATH + "/all"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.PROJECT_LIST.getPath()))
                 .andExpect(model().attributeExists("projectList"));
@@ -63,7 +62,7 @@ class ProjectControllerTest {
     void showProject() throws Exception {
         when(projectService.findById(anyLong())).thenReturn(returnedProject);
 
-        mockMvc.perform(get(PROJECT_PATH + "/{projectId}", returnedProject.getId()))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/{projectId}", returnedProject.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.PROJECT.getPath()))
                 .andExpect(model().attributeExists("project"));
@@ -73,7 +72,7 @@ class ProjectControllerTest {
 
     @Test
     void addNewProject() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/new"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_PROJECT.getPath()))
                 .andExpect(model().attributeExists("project"));
@@ -85,7 +84,7 @@ class ProjectControllerTest {
         when(projectService.save(any())).thenReturn(project);
         when(projectService.findById(anyLong())).thenReturn(returnedProject);
 
-        mockMvc.perform(post(PROJECT_PATH + "/new"))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/" + project.getId()));
 
@@ -96,7 +95,7 @@ class ProjectControllerTest {
     void editProject() throws Exception {
         when(projectService.findById(anyLong())).thenReturn(returnedProject);
 
-        mockMvc.perform(get(PROJECT_PATH + "/{projectId}/edit", returnedProject.getId()))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/{projectId}/edit", returnedProject.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_PROJECT.getPath()))
                 .andExpect(model().attribute("project", returnedProject));
@@ -109,7 +108,7 @@ class ProjectControllerTest {
         when(projectService.findById(anyLong())).thenReturn(returnedProject);
         when(projectService.save(any())).thenReturn(returnedProject);
 
-        mockMvc.perform(post(PROJECT_PATH + "/{projectId}/edit", returnedProject.getId()))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/{projectId}/edit", returnedProject.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/" + returnedProject.getId()));
 
@@ -120,7 +119,7 @@ class ProjectControllerTest {
     void deleteProject() throws Exception {
         when(projectService.findById(anyLong())).thenReturn(returnedProject);
 
-        mockMvc.perform(get(PROJECT_PATH + "/{projectId}/delete", returnedProject.getId()))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/{projectId}/delete", returnedProject.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/all"));
 
