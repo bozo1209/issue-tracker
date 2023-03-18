@@ -22,7 +22,7 @@ public class IssueCommentController {
 
     private final IssueCommentService issueCommentService;
     private final IssueService issueService;
-
+// admin + user
     @PostMapping("/new")
     public String processAddingComment(@Valid IssueComment comment, @PathVariable Long issueId, BindingResult result){
         Issue issueById = issueService.findById(issueId);
@@ -31,7 +31,7 @@ public class IssueCommentController {
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
     }
-
+    // admin + user
     @PostMapping("/{commentId}/edit")
     public String processEditingComment(@Valid IssueComment comment, @PathVariable Long issueId, @PathVariable Long commentId, BindingResult result){
         Issue issueById = issueService.findById(issueId);
@@ -41,7 +41,7 @@ public class IssueCommentController {
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
     }
-
+    // admin + user
     @GetMapping("/{commentId}/delete")
     public String deleteComment(@PathVariable Long commentId, @PathVariable Long issueId){
         issueService.findById(issueId).getComments().remove(issueCommentService.findById(commentId));
