@@ -1,5 +1,6 @@
 package com.bozo.issuetracker.controllers;
 
+import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
 import com.bozo.issuetracker.service.IssueCommentService;
@@ -25,8 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class IssueCommentControllerTest {
-
-    String COMMENT_PATH = "/issue/{issueId}/comment";
 
     @Mock
     IssueCommentService commentService;
@@ -57,7 +56,7 @@ class IssueCommentControllerTest {
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(comment);
 
-        mockMvc.perform(post(COMMENT_PATH + "/new", issue.getId()))
+        mockMvc.perform(post(Paths.COMMENT_PATH.getPath() + "/new", issue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
@@ -70,7 +69,7 @@ class IssueCommentControllerTest {
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(returnedComment);
 
-        mockMvc.perform(post(COMMENT_PATH + "/{commentId}/edit", issue.getId(), returnedComment.getId()))
+        mockMvc.perform(post(Paths.COMMENT_PATH.getPath() + "/{commentId}/edit", issue.getId(), returnedComment.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
@@ -82,7 +81,7 @@ class IssueCommentControllerTest {
         when(commentService.findById(anyLong())).thenReturn(returnedComment);
         when(issueService.findById(anyLong())).thenReturn(issue);
 
-        mockMvc.perform(get(COMMENT_PATH + "/{commentId}/delete", issue.getId(), returnedComment.getId()))
+        mockMvc.perform(get(Paths.COMMENT_PATH.getPath() + "/{commentId}/delete", issue.getId(), returnedComment.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 

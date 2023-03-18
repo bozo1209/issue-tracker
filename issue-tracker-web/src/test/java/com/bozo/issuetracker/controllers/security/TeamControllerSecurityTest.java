@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers.security;
 
 import com.bozo.issuetracker.controllers.TeamController;
+import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
@@ -29,25 +30,23 @@ public class TeamControllerSecurityTest {
     @MockBean
     private TeamSDJpaService teamService;
 
-    private final String TEAM_PATH = "/team";
-
     @WithMockUserRoleAdmin
     @Test
     public void allTeamListAdmin() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/all"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/all"))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void allTeamListUser() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/all"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/all"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void allTeamListUnauthorized() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/all"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/all"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -55,7 +54,7 @@ public class TeamControllerSecurityTest {
     @Test
     public void showTeamAdmin() throws Exception {
         when(teamService.findById(anyLong())).thenReturn(Team.builder().build());
-        mockMvc.perform(get(TEAM_PATH + "/1"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1"))
                 .andExpect(status().isOk());
     }
 
@@ -63,33 +62,33 @@ public class TeamControllerSecurityTest {
     @Test
     public void showTeamUser() throws Exception {
         when(teamService.findById(anyLong())).thenReturn(Team.builder().build());
-        mockMvc.perform(get(TEAM_PATH + "/1"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void showTeamUnauthorized() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/1"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleAdmin
     @Test
     public void addNewTeamAdmin() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/new"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/new"))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void addNewTeamUser() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/new"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/new"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void addNewTeamUnauthorized() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/new"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -97,14 +96,14 @@ public class TeamControllerSecurityTest {
     @Test
     public void processAddingTeamAdmin() throws Exception {
         when(teamService.save(any())).thenReturn(Team.builder().id(1L).build());
-        mockMvc.perform(post(TEAM_PATH + "/new"))
+        mockMvc.perform(post(Paths.TEAM_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void processAddingTeamUser() throws Exception {
-        mockMvc.perform(post(TEAM_PATH + "/new"))
+        mockMvc.perform(post(Paths.TEAM_PATH.getPath() + "/new"))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(teamService);
@@ -112,7 +111,7 @@ public class TeamControllerSecurityTest {
 
     @Test
     public void processAddingTeamUnauthorized() throws Exception {
-        mockMvc.perform(post(TEAM_PATH + "/new"))
+        mockMvc.perform(post(Paths.TEAM_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
 
         verifyNoInteractions(teamService);
@@ -123,20 +122,20 @@ public class TeamControllerSecurityTest {
     public void editNewTeamAdmin() throws Exception {
         Team team = Team.builder().id(1L).build();
         when(teamService.findById(anyLong())).thenReturn(team);
-        mockMvc.perform(get(TEAM_PATH + "/{teamId}/edit", team.getId()))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/edit", team.getId()))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void editNewTeamUser() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/1/edit"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1/edit"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void editNewTeamUnauthorized() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/1/edit"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1/edit"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -146,14 +145,14 @@ public class TeamControllerSecurityTest {
         Team team = Team.builder().id(1L).build();
         when(teamService.findById(anyLong())).thenReturn(team);
         when(teamService.save(any())).thenReturn(team);
-        mockMvc.perform(post(TEAM_PATH + "/{teamId}/edit", team.getId()))
+        mockMvc.perform(post(Paths.TEAM_PATH.getPath() + "/{teamId}/edit", team.getId()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void processEditingTeamUser() throws Exception {
-        mockMvc.perform(post(TEAM_PATH + "/1/edit"))
+        mockMvc.perform(post(Paths.TEAM_PATH.getPath() + "/1/edit"))
                 .andExpect(status().isForbidden());
 
         verify(teamService, times(0)).save(any());
@@ -161,7 +160,7 @@ public class TeamControllerSecurityTest {
 
     @Test
     public void processEditingTeamUnauthorized() throws Exception {
-        mockMvc.perform(post(TEAM_PATH + "/1/edit"))
+        mockMvc.perform(post(Paths.TEAM_PATH.getPath() + "/1/edit"))
                 .andExpect(status().is3xxRedirection());
 
         verify(teamService, times(0)).save(any());
@@ -171,14 +170,14 @@ public class TeamControllerSecurityTest {
     @Test
     public void deleteTeamAdmin() throws Exception {
         Team team = Team.builder().id(1L).build();
-        mockMvc.perform(get(TEAM_PATH + "/{teamId}/delete", team.getId()))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/delete", team.getId()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void deleteTeamUser() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/1/delete"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1/delete"))
                 .andExpect(status().isForbidden());
 
         verify(teamService, times(0)).deleteById(anyLong());
@@ -186,7 +185,7 @@ public class TeamControllerSecurityTest {
 
     @Test
     public void deleteTeamUnauthorized() throws Exception {
-        mockMvc.perform(get(TEAM_PATH + "/1/delete"))
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1/delete"))
                 .andExpect(status().is3xxRedirection());
 
         verify(teamService, times(0)).deleteById(anyLong());

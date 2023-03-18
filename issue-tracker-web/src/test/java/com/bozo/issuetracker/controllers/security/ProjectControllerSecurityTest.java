@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers.security;
 
 import com.bozo.issuetracker.controllers.ProjectController;
+import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
@@ -30,25 +31,23 @@ public class ProjectControllerSecurityTest {
     @MockBean
     private ProjectSDJpaService projectService;
 
-    private final String PROJECT_PATH = "/project";
-
     @WithMockUserRoleAdmin
     @Test
     public void allProjectListAdmin() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/all"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/all"))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void allProjectListUser() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/all"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/all"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void allProjectListUnauthorized() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/all"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/all"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -56,7 +55,7 @@ public class ProjectControllerSecurityTest {
     @Test
     public void showProjectAdmin() throws Exception {
         when(projectService.findById(anyLong())).thenReturn(Project.builder().build());
-        mockMvc.perform(get(PROJECT_PATH + "/1"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/1"))
                 .andExpect(status().isOk());
     }
 
@@ -64,33 +63,33 @@ public class ProjectControllerSecurityTest {
     @Test
     public void showProjectUser() throws Exception {
         when(projectService.findById(anyLong())).thenReturn(Project.builder().build());
-        mockMvc.perform(get(PROJECT_PATH + "/1"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void showProjectUnauthorized() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/1"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleAdmin
     @Test
     public void addNewProjectAdmin() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/new"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void addNewProjectUser() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/new"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void addNewProjectUnauthorized() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/new"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -103,14 +102,14 @@ public class ProjectControllerSecurityTest {
                                     .build();
         when(projectService.findById(anyLong())).thenReturn(project);
         when(projectService.save(any())).thenReturn(project);
-        mockMvc.perform(post(PROJECT_PATH + "/new"))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void processAddingProjectUser() throws Exception {
-        mockMvc.perform(post(PROJECT_PATH + "/new"))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(projectService);
@@ -118,7 +117,7 @@ public class ProjectControllerSecurityTest {
 
     @Test
     public void processAddingProjectUnauthorized() throws Exception {
-        mockMvc.perform(post(PROJECT_PATH + "/new"))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
 
         verifyNoInteractions(projectService);
@@ -129,20 +128,20 @@ public class ProjectControllerSecurityTest {
     public void editNewProjectAdmin() throws Exception {
         Project project = Project.builder().id(1L).build();
         when(projectService.findById(anyLong())).thenReturn(project);
-        mockMvc.perform(get(PROJECT_PATH + "/{projectId}/edit", project.getId()))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/{projectId}/edit", project.getId()))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void editNewProjectUser() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/1/edit"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/1/edit"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void editNewProjectUnauthorized() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/1/edit"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/1/edit"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -152,14 +151,14 @@ public class ProjectControllerSecurityTest {
         Project project = Project.builder().id(1L).assignedTeam(Team.builder().build()).build();
         when(projectService.findById(anyLong())).thenReturn(project);
         when(projectService.save(any())).thenReturn(project);
-        mockMvc.perform(post(PROJECT_PATH + "/{projectId}/edit", project.getId()))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/{projectId}/edit", project.getId()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void processEditingProjectUser() throws Exception {
-        mockMvc.perform(post(PROJECT_PATH + "/new"))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().isForbidden());
 
         verify(projectService, times(0)).save(any());
@@ -167,7 +166,7 @@ public class ProjectControllerSecurityTest {
 
     @Test
     public void processEditingProjectUnauthorized() throws Exception {
-        mockMvc.perform(post(PROJECT_PATH + "/new"))
+        mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
 
         verify(projectService, times(0)).save(any());
@@ -181,14 +180,14 @@ public class ProjectControllerSecurityTest {
                                     .assignedTeam(Team.builder().build())
                                     .build();
         when(projectService.findById(anyLong())).thenReturn(project);
-        mockMvc.perform(get(PROJECT_PATH + "/{projectId}/delete", project.getId()))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/{projectId}/delete", project.getId()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void deleteProjectUser() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/1/delete"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/1/delete"))
                 .andExpect(status().isForbidden());
 
         verify(projectService, times(0)).deleteById(anyLong());
@@ -196,7 +195,7 @@ public class ProjectControllerSecurityTest {
 
     @Test
     public void deleteProjectUnauthorized() throws Exception {
-        mockMvc.perform(get(PROJECT_PATH + "/1/delete"))
+        mockMvc.perform(get(Paths.PROJECT_PATH.getPath() + "/1/delete"))
                 .andExpect(status().is3xxRedirection());
 
         verify(projectService, times(0)).deleteById(anyLong());

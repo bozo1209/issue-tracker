@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers.security;
 
 import com.bozo.issuetracker.controllers.UserController;
+import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
@@ -30,25 +31,23 @@ public class UserControllerSecurityTest {
     @MockBean
     private UserSDJpaService userService;
 
-    private final String USER_PATH = "/user";
-
     @WithMockUserRoleAdmin
     @Test
     public void allUserListAdmin() throws Exception {
-        mockMvc.perform(get(USER_PATH +"/all"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() +"/all"))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void allUserListUser() throws Exception {
-        mockMvc.perform(get(USER_PATH +"/all"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() +"/all"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void allUserListUnauthorized() throws Exception {
-        mockMvc.perform(get(USER_PATH +"/all"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() +"/all"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -56,7 +55,7 @@ public class UserControllerSecurityTest {
     @Test
     public void showUserByIdAdmin() throws Exception {
         when(userService.findById(anyLong())).thenReturn(User.builder().build());
-        mockMvc.perform(get(USER_PATH +"/1"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() +"/1"))
                 .andExpect(status().isOk());
     }
 
@@ -64,33 +63,33 @@ public class UserControllerSecurityTest {
     @Test
     public void showUserByIdUser() throws Exception {
         when(userService.findById(anyLong())).thenReturn(User.builder().build());
-        mockMvc.perform(get(USER_PATH +"/1"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() +"/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void showUserByIdUnauthorized() throws Exception {
-        mockMvc.perform(get(USER_PATH +"/1"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() +"/1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleAdmin
     @Test
     public void addNewUserAdmin() throws Exception {
-        mockMvc.perform(get(USER_PATH + "/new"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/new"))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleUser
     @Test
     public void addNewUserUser() throws Exception {
-        mockMvc.perform(get(USER_PATH + "/new"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/new"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void addNewUserUnauthorized() throws Exception {
-        mockMvc.perform(get(USER_PATH + "/new"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -99,14 +98,14 @@ public class UserControllerSecurityTest {
     public void processAddingUserAdmin() throws Exception {
         when(userService.save(any())).thenReturn(User.builder().id(1L).build());
 
-        mockMvc.perform(post(USER_PATH + "/new"))
+        mockMvc.perform(post(Paths.USER_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void processAddingUserUser() throws Exception {
-        mockMvc.perform(post(USER_PATH + "/new"))
+        mockMvc.perform(post(Paths.USER_PATH.getPath() + "/new"))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(userService);
@@ -114,7 +113,7 @@ public class UserControllerSecurityTest {
 
     @Test
     public void processAddingUserUnauthorized() throws Exception {
-        mockMvc.perform(post(USER_PATH + "/new"))
+        mockMvc.perform(post(Paths.USER_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
 
         verifyNoInteractions(userService);
@@ -126,7 +125,7 @@ public class UserControllerSecurityTest {
         User user2 = User.builder().id(2L).build();
         when(userService.findById(anyLong())).thenReturn(user2);
 
-        mockMvc.perform(get(USER_PATH + "/{userId}/edit", user2.getId()))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().isOk());
     }
 
@@ -136,20 +135,20 @@ public class UserControllerSecurityTest {
         User user2 = User.builder().id(2L).build();
         when(userService.findById(anyLong())).thenReturn(user2);
 
-        mockMvc.perform(get(USER_PATH + "/{userId}/edit", user2.getId()))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().isOk());
     }
 
     @WithUserDetails(value = "user3", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void editUserUserWithDifferentId() throws Exception {
-        mockMvc.perform(get(USER_PATH + "/2/edit"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/2/edit"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void editUserUnauthorized() throws Exception {
-        mockMvc.perform(get(USER_PATH + "/2/edit"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/2/edit"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -160,7 +159,7 @@ public class UserControllerSecurityTest {
         when(userService.findById(anyLong())).thenReturn(user2);
         when(userService.save(any())).thenReturn(user2);
 
-        mockMvc.perform(post(USER_PATH + "/{userId}/edit", user2.getId()))
+        mockMvc.perform(post(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -171,14 +170,14 @@ public class UserControllerSecurityTest {
         when(userService.findById(anyLong())).thenReturn(user2);
         when(userService.save(any())).thenReturn(user2);
 
-        mockMvc.perform(post(USER_PATH + "/{userId}/edit", user2.getId()))
+        mockMvc.perform(post(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithUserDetails(value = "user3", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void processEditingUserUserWithDifferentId() throws Exception {
-        mockMvc.perform(post(USER_PATH + "/2/edit"))
+        mockMvc.perform(post(Paths.USER_PATH.getPath() + "/2/edit"))
                 .andExpect(status().isForbidden());
 
         verify(userService, times(0)).save(any());
@@ -186,7 +185,7 @@ public class UserControllerSecurityTest {
 
     @Test
     public void processEditingUserUnauthorized() throws Exception {
-        mockMvc.perform(post(USER_PATH + "/2/edit"))
+        mockMvc.perform(post(Paths.USER_PATH.getPath() + "/2/edit"))
                 .andExpect(status().is3xxRedirection());
 
         verify(userService, times(0)).save(any());
@@ -197,14 +196,14 @@ public class UserControllerSecurityTest {
     public void deleteUserAmin() throws Exception {
         User user1 = User.builder().id(1L).build();
         when(userService.findById(anyLong())).thenReturn(user1);
-        mockMvc.perform(get(USER_PATH + "/{userId}/delete", user1.getId()))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/{userId}/delete", user1.getId()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @WithMockUserRoleUser
     @Test
     public void deleteUserUser() throws Exception {
-        mockMvc.perform(get(USER_PATH + "/1/delete"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/1/delete"))
                 .andExpect(status().isForbidden());
 
         verify(userService, times(0)).deleteById(anyLong());
@@ -212,7 +211,7 @@ public class UserControllerSecurityTest {
 
     @Test
     public void deleteUserUnauthorized() throws Exception {
-        mockMvc.perform(get(USER_PATH + "/1/delete"))
+        mockMvc.perform(get(Paths.USER_PATH.getPath() + "/1/delete"))
                 .andExpect(status().is3xxRedirection());
 
         verify(userService, times(0)).deleteById(anyLong());
