@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
+import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
 import com.bozo.issuetracker.service.IssueCommentService;
@@ -22,7 +23,8 @@ public class IssueCommentController {
 
     private final IssueCommentService issueCommentService;
     private final IssueService issueService;
-
+// admin + user
+    @PreAuthorizeRoleAdminOrRoleUser
     @PostMapping("/new")
     public String processAddingComment(@Valid IssueComment comment, @PathVariable Long issueId, BindingResult result){
         Issue issueById = issueService.findById(issueId);
@@ -31,7 +33,8 @@ public class IssueCommentController {
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
     }
-
+    // admin + user
+    @PreAuthorizeRoleAdminOrRoleUser
     @PostMapping("/{commentId}/edit")
     public String processEditingComment(@Valid IssueComment comment, @PathVariable Long issueId, @PathVariable Long commentId, BindingResult result){
         Issue issueById = issueService.findById(issueId);
@@ -41,7 +44,8 @@ public class IssueCommentController {
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
     }
-
+    // admin + user
+    @PreAuthorizeRoleAdminOrRoleUser
     @GetMapping("/{commentId}/delete")
     public String deleteComment(@PathVariable Long commentId, @PathVariable Long issueId){
         issueService.findById(issueId).getComments().remove(issueCommentService.findById(commentId));
