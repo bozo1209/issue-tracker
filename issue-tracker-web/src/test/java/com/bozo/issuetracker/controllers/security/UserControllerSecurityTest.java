@@ -5,6 +5,7 @@ import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.springdatajpa.UserSDJpaService;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ public class UserControllerSecurityTest {
 
     @MockBean
     private UserSDJpaService userService;
+
+    @MockBean
+    private EncodePasswordForUser encodePasswordForUser;
 
     @WithMockUserRoleAdmin
     @Test
@@ -97,6 +101,7 @@ public class UserControllerSecurityTest {
     @Test
     public void processAddingUserAdmin() throws Exception {
         when(userService.save(any())).thenReturn(User.builder().id(1L).build());
+        when(encodePasswordForUser.encodePasswordForUser(anyString())).thenReturn("pass");
 
         mockMvc.perform(post(Paths.USER_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection());
@@ -155,9 +160,10 @@ public class UserControllerSecurityTest {
     @WithMockUserRoleAdmin
     @Test
     public void processEditingUserAdmin() throws Exception {
-        User user2 = User.builder().id(2L).build();
+        User user2 = User.builder().id(2L).password("pass").build();
         when(userService.findById(anyLong())).thenReturn(user2);
         when(userService.save(any())).thenReturn(user2);
+        when(encodePasswordForUser.encodePasswordForUser(anyString())).thenReturn("pass");
 
         mockMvc.perform(post(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().is3xxRedirection());
@@ -169,6 +175,7 @@ public class UserControllerSecurityTest {
         User user2 = User.builder().id(2L).build();
         when(userService.findById(anyLong())).thenReturn(user2);
         when(userService.save(any())).thenReturn(user2);
+        when(encodePasswordForUser.encodePasswordForUser(anyString())).thenReturn("pass");
 
         mockMvc.perform(post(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().is3xxRedirection());

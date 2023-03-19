@@ -3,6 +3,7 @@ package com.bozo.issuetracker.controllers;
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrUserWithSameId;
+import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.UserService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
 
     private final UserService userService;
+    private final EncodePasswordForUser encodePasswordForUser;
 // user + admin
     @PreAuthorizeRoleAdminOrRoleUser
     @GetMapping("/all")
@@ -51,6 +53,7 @@ public class UserController {
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_USER.getPath();
         }
+        user.setPassword(encodePasswordForUser.encodePasswordForUser(user.getPassword()));
         User savedUser = userService.save(user);
         return "redirect:/user/" + savedUser.getId();
     }
@@ -70,6 +73,7 @@ public class UserController {
         }
         User userById = userService.findById(userId);
         userById.setUserName(user.getUserName());
+        userById.setPassword(encodePasswordForUser.encodePasswordForUser(user.getPassword()));
         User savedUser = userService.save(userById);
         return "redirect:/user/" + savedUser.getId();
     }

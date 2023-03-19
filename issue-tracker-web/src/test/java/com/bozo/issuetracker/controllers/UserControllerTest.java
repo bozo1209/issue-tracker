@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.controllers.pathsConfig.Paths;
+import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.UserService;
@@ -28,6 +29,9 @@ class UserControllerTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    EncodePasswordForUser encodePasswordForUser;
 
     @InjectMocks
     UserController controller;
