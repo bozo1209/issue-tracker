@@ -10,6 +10,10 @@
         <label>user name</label>
         <input type="text" th:field="*{userName}">
     </div>
+    <div>
+        <label>password</label>
+        <input type="password" th:field="*{password}">
+    </div>
     <button type="submit" th:with="text=${user['new']} ? 'Add User' : 'Update User'" th:text="${text}">add</button>
 </form>
 </body>
