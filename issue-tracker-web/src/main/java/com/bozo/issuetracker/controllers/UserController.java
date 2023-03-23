@@ -5,6 +5,7 @@ import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrUserWithSameId;
 import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
+import com.bozo.issuetracker.enums.UserRoles;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.UserService;
 import jakarta.validation.Valid;
@@ -14,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RequestMapping("/user")
 @Controller
@@ -48,6 +51,7 @@ public class UserController {
     @GetMapping("/new")
     public String addNewUser(Model model){
         model.addAttribute("user", User.builder().build());
+        model.addAttribute("roleList", Arrays.asList(UserRoles.values()));
         return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 // admin
@@ -66,6 +70,7 @@ public class UserController {
     @GetMapping("/{userId}/edit")
     public String editUser(@PathVariable Long userId, Model model){
         model.addAttribute("user", userService.findById(userId));
+        model.addAttribute("roleList", Arrays.asList(UserRoles.values()));
         return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 // user with id + admin
@@ -78,6 +83,7 @@ public class UserController {
         User userById = userService.findById(userId);
         userById.setUserName(user.getUserName());
         userById.setPassword(encodePasswordForUser.encodePasswordForUser(user.getPassword()));
+        userById.setRole(user.getRole());
         User savedUser = userService.save(userById);
         return "redirect:/user/" + savedUser.getId();
     }
