@@ -14,6 +14,13 @@
         <label>password</label>
         <input type="password" th:field="*{password}">
     </div>
+    <div>
+        <label>user role</label>
+        <select th:field="*{role}">
+            <option value=" "></option>
+            <option th:each="role : ${roleList}" th:value="${role}" th:text="${role}"></option>
+        </select>
+    </div>
     <button type="submit" th:with="text=${user['new']} ? 'Add User' : 'Update User'" th:text="${text}">add</button>
 </form>
 </body>
