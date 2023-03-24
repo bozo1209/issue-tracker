@@ -28,10 +28,16 @@ public class Issue extends BaseEntity {
     private Project project;
 
     @Builder
-    public Issue(Long id, String description, User issueCreator, Set<IssueComment> comments) {
+    public Issue(
+            Long id,
+            String description,
+            User issueCreator,
+            Set<IssueComment> comments,
+            Project project) {
         super(id);
         this.description = description;
         this.issueCreator = issueCreator;
         this.comments = Optional.ofNullable(comments).orElseGet(this::getComments);
+        this.project = project;
     }
 }

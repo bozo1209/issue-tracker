@@ -5,7 +5,11 @@
     <title th:with="text=${issue['new']} ? 'Add Issue' : 'Update Issue'" th:text="${text}">Title</title>
 </head>
 <body>
-<form th:with="addorupdate=${issue['new']} ? 'new' : ${issue?.id} + '/edit'" th:action="@{/issue/{l}(l=${addorupdate})}" th:object="${issue}" method="post">
+<form
+        th:with="addorupdate=${issue['new']} ? 'new' : ${issue?.id} + '/edit'"
+        th:action="@{/project/__${project.id}__/issue/{l}(l=${addorupdate})}"
+        th:object="${issue}"
+        method="post">
 <div>
     <label>description</label>
     <input type="text" th:field="*{description}">

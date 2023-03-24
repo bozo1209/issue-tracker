@@ -4,6 +4,7 @@ public enum Paths {
     USER_PATH("/user"),
     TEAM_PATH("/team"),
     PROJECT_PATH("/project"),
+    PROJECT_ISSUE_PATH("/project/{projectId}/issue"),
     ISSUE_PATH("/issue"),
     COMMENT_PATH("/issue/{issueId}/comment");
 

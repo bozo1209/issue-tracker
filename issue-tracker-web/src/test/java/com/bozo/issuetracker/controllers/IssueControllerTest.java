@@ -3,8 +3,10 @@ package com.bozo.issuetracker.controllers;
 import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
+import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueService;
+import com.bozo.issuetracker.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,9 @@ class IssueControllerTest {
 
     @Mock
     IssueService issueService;
+
+    @Mock
+    ProjectService projectService;
 
     @InjectMocks
     IssueController controller;
@@ -74,19 +79,24 @@ class IssueControllerTest {
 
     @Test
     void addNewIssue() throws Exception {
-        mockMvc.perform(get(Paths.ISSUE_PATH.getPath() +"/new"))
+        when(projectService.findById(anyLong())).thenReturn(Project.builder().id(1L).build());
+
+        mockMvc.perform(get(Paths.PROJECT_ISSUE_PATH.getPath() + "/new", 1))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
-                .andExpect(model().attributeExists("issue"));
+                .andExpect(model().attributeExists("issue"))
+                .andExpect(model().attributeExists("project"));
     }
 
     @Test
     void processAddingIssue() throws Exception {
         Issue issue = Issue.builder().id(2L).build();
+
         when(issueService.save(any())).thenReturn(issue);
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
+        when(projectService.findById(anyLong())).thenReturn(Project.builder().id(1L).build());
 
-        mockMvc.perform(post(Paths.ISSUE_PATH.getPath() +"/new"))
+        mockMvc.perform(post(Paths.PROJECT_ISSUE_PATH.getPath() + "/new", 1))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + issue.getId()));
 
@@ -96,11 +106,13 @@ class IssueControllerTest {
     @Test
     void editIssue() throws Exception {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
+        when(projectService.findById(anyLong())).thenReturn(Project.builder().id(1L).build());
 
-        mockMvc.perform(get(Paths.ISSUE_PATH.getPath() +"/{issueId}/edit", returnedIssue.getId()))
+        mockMvc.perform(get(Paths.PROJECT_ISSUE_PATH.getPath() +"/{issueId}/edit", 1, returnedIssue.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.ADD_EDIT_ISSUE.getPath()))
-                .andExpect(model().attribute("issue", returnedIssue));
+                .andExpect(model().attribute("issue", returnedIssue))
+                .andExpect(model().attributeExists("project"));
 
         verifyNoMoreInteractions(issueService);
     }
@@ -110,7 +122,7 @@ class IssueControllerTest {
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
         when(issueService.save(any())).thenReturn(returnedIssue);
 
-        mockMvc.perform(post(Paths.ISSUE_PATH.getPath() +"/{issueId}/edit", returnedIssue.getId()))
+        mockMvc.perform(post(Paths.PROJECT_ISSUE_PATH.getPath() +"/{issueId}/edit", 1, returnedIssue.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/issue/" + returnedIssue.getId()));
 
@@ -119,11 +131,13 @@ class IssueControllerTest {
 
     @Test
     void deleteIssue() throws Exception {
+        returnedIssue.setProject(Project.builder().id(1L).build());
+
         when(issueService.findById(anyLong())).thenReturn(returnedIssue);
 
         mockMvc.perform(get(Paths.ISSUE_PATH.getPath() +"/{issueId}/delete", returnedIssue.getId()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/issue/all"));
+                .andExpect(view().name("redirect:/project/" + returnedIssue.getProject().getId()));
 
         verify(issueService).deleteById(anyLong());
     }
