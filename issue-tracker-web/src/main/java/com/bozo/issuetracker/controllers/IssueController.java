@@ -5,7 +5,9 @@ import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
+import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.service.IssueService;
+import com.bozo.issuetracker.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,13 +16,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/issue")
 @Controller
 @PreAuthorizeRoleAdmin
 @AllArgsConstructor
 public class IssueController {
 
     private final IssueService issueService;
+    private final ProjectService projectService;
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
     @InitBinder
@@ -29,14 +31,14 @@ public class IssueController {
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
-    @GetMapping("/all")
+    @GetMapping("/issue/all")
     public String allIssueList(Model model){
         model.addAttribute("issueList", issueService.findAll());
         return HTMLPaths.ISSUE_LIST.getPath();
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
-    @GetMapping("/{issueId}")
+    @GetMapping("/issue/{issueId}")
     public String showIssue(@PathVariable Long issueId, Model model){
         model.addAttribute("issue", issueService.findById(issueId));
         model.addAttribute("comment", IssueComment.builder().build());
@@ -44,15 +46,16 @@ public class IssueController {
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
-    @GetMapping("/new")
-    public String addNewIssue(Model model){
+    @GetMapping("/project/{projectId}/issue/new")
+    public String addNewIssue(@PathVariable Long projectId, Model model){
+        model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("issue", Issue.builder().build());
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
-    @PostMapping("/new")
-    public String processAddingIssue(@Valid Issue issue, BindingResult result){
+    @PostMapping("/project/{projectId}/issue/new")
+    public String processAddingIssue(@Valid Issue issue, @PathVariable Long projectId, BindingResult result){
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
@@ -60,20 +63,24 @@ public class IssueController {
         Issue issueById = issueService.findById(1L);
         issue.setIssueCreator(issueById.getIssueCreator());
         issueById.getIssueCreator().getIssuesObserve().add(issue);
+        Project projectById = projectService.findById(projectId);
+        projectById.getIssues().add(issue);
+        issue.setProject(projectById);
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
-    @GetMapping("/{issueId}/edit")
-    public String editIssue(@PathVariable Long issueId, Model model){
+    @GetMapping("/project/{projectId}/issue/{issueId}/edit")
+    public String editIssue(@PathVariable Long issueId, @PathVariable Long projectId, Model model){
+        model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("issue", issueService.findById(issueId));
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
-    @PostMapping("/{issueId}/edit")
-    public String processEditingIssue(@Valid Issue issue, @PathVariable Long issueId, BindingResult result){
+    @PostMapping("/project/{projectId}/issue/{issueId}/edit")
+    public String processEditingIssue(@Valid Issue issue, @PathVariable Long issueId, @PathVariable Long projectId, BindingResult result){
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
@@ -81,16 +88,17 @@ public class IssueController {
         Issue issueById = issueService.findById(issueId);
         issue.setIssueCreator(issueById.getIssueCreator());
         issue.setComments(issueById.getComments());
+        issue.setProject(issueById.getProject());
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
-    @GetMapping("/{issueId}/delete")
+    @GetMapping("/issue/{issueId}/delete")
     public String deleteIssue(@PathVariable Long issueId){
         Issue issueById = issueService.findById(issueId);
         issueById.getIssueCreator().getIssuesObserve().remove(issueById);
         issueService.deleteById(issueId);
-        return "redirect:/issue/all";
+        return "redirect:/project/" + issueById.getProject().getId();
     }
 }
