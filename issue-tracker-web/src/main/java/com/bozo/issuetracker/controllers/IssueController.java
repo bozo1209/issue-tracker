@@ -98,6 +98,7 @@ public class IssueController {
     public String deleteIssue(@PathVariable Long issueId){
         Issue issueById = issueService.findById(issueId);
         issueById.getIssueCreator().getIssuesObserve().remove(issueById);
+        issueById.getUsersObserving().forEach(u -> u.getIssuesObserve().remove(issueById));
         issueService.deleteById(issueId);
         return "redirect:/project/" + issueById.getProject().getId();
     }
