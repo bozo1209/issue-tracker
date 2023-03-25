@@ -6,10 +6,10 @@
 </head>
 <body>
 <div>
-    <a th:href="@{/issue/new}" th:text="'add new'"></a>
+    <a th:href="@{/project/__${issue.project.id}__/issue/new}" th:text="'add new'"></a>
 </div>
 <div>
-    <a th:href="@{/issue/{id}/edit(id=${issue.id})}" th:text="edit"></a>
+    <a th:href="@{/project/__${issue.project.id}__/issue/{id}/edit(id=${issue.id})}" th:text="edit"></a>
 </div>
 <div>
     <a th:href="@{/issue/{id}/delete(id=${issue.id})}" th:text="delete"></a>
