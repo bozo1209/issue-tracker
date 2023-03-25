@@ -6,9 +6,6 @@
 </head>
 <body>
 <div>
-    <a th:href="@{/issue/new}" th:text="add"></a>
-</div>
-<div>
     <table>
         <tr>
             <th>description</th>
@@ -21,7 +18,7 @@
             <td th:text="${issue.issueCreator?.userName}">creator</td>
             <td th:text="${issue.comments.size}">size</td>
             <td><a th:href="@{/issue/{id}(id=${issue.id})}" th:text="'go to issue'"></a></td>
-            <td><a th:href="@{/issue/{id}/edit(id=${issue.id})}" th:text="edit"></a></td>
+            <td><a th:href="@{/project/__${issue.project.id}__/issue/{id}/edit(id=${issue.id})}" th:text="edit"></a></td>
             <td><a th:href="@{/issue/{id}/delete(id=${issue.id})}" th:text="delete"></a></td>
         </tr>
     </table>

@@ -59,7 +59,7 @@ public class IssueControllerSecurityTest {
     @WithMockUserRoleAdmin
     @Test
     public void showIssueAdmin() throws Exception {
-        Issue issue = Issue.builder().id(1L).build();
+        Issue issue = Issue.builder().id(1L).project(Project.builder().id(1L).build()).build();
 
         when(issueService.findById(anyLong())).thenReturn(issue);
 
@@ -70,7 +70,7 @@ public class IssueControllerSecurityTest {
     @WithMockUserRoleUser
     @Test
     public void showIssueUser() throws Exception {
-        Issue issue = Issue.builder().id(1L).build();
+        Issue issue = Issue.builder().id(1L).project(Project.builder().id(1L).build()).build();
 
         when(issueService.findById(anyLong())).thenReturn(issue);
 
