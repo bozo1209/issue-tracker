@@ -2,12 +2,15 @@ package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
+import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueCommentService;
 import com.bozo.issuetracker.service.IssueService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +30,10 @@ public class IssueCommentController {
     @PreAuthorizeRoleAdminOrRoleUser
     @PostMapping("/new")
     public String processAddingComment(@Valid IssueComment comment, @PathVariable Long issueId, BindingResult result){
+        User loggedUser = ((ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Issue issueById = issueService.findById(issueId);
         comment.setIssue(issueById);
-        comment.setCommentCreator(issueById.getIssueCreator());
+        comment.setCommentCreator(loggedUser);
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
     }
@@ -40,7 +44,7 @@ public class IssueCommentController {
         Issue issueById = issueService.findById(issueId);
         comment.setId(commentId);
         comment.setIssue(issueById);
-        comment.setCommentCreator(issueById.getIssueCreator());
+        comment.setCommentCreator(issueCommentService.findById(commentId).getCommentCreator());
         issueCommentService.save(comment);
         return "redirect:/issue/" + issueId;
     }

@@ -1,8 +1,10 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.controllers.pathsConfig.Paths;
+import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueCommentService;
 import com.bozo.issuetracker.service.IssueService;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -26,6 +31,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class IssueCommentControllerTest {
+
+    @Mock
+    Authentication authentication;
+
+    @Mock
+    SecurityContext securityContext;
 
     @Mock
     IssueCommentService commentService;
@@ -52,7 +63,12 @@ class IssueCommentControllerTest {
 
     @Test
     void processAddingComment() throws Exception{
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(new ApplicationUser(User.builder().build()));
+
         IssueComment comment = IssueComment.builder().id(2L).issue(issue).build();
+
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(comment);
 
@@ -66,7 +82,9 @@ class IssueCommentControllerTest {
     @Test
     void processEditingComment() throws Exception{
         returnedComment.setComment("edit");
+
         when(issueService.findById(anyLong())).thenReturn(issue);
+        when(commentService.findById(anyLong())).thenReturn(returnedComment);
         when(commentService.save(any())).thenReturn(returnedComment);
 
         mockMvc.perform(post(Paths.COMMENT_PATH.getPath() + "/{commentId}/edit", issue.getId(), returnedComment.getId()))
