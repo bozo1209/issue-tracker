@@ -2,14 +2,17 @@ package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
+import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
 import com.bozo.issuetracker.model.Project;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.IssueService;
 import com.bozo.issuetracker.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,9 +63,9 @@ public class IssueController {
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
 
-        Issue issueById = issueService.findById(1L);
-        issue.setIssueCreator(issueById.getIssueCreator());
-        issueById.getIssueCreator().getIssuesObserve().add(issue);
+        User loggedUser = ((ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        issue.setIssueCreator(loggedUser);
+        loggedUser.getIssuesObserve().add(issue);
         Project projectById = projectService.findById(projectId);
         projectById.getIssues().add(issue);
         issue.setProject(projectById);
@@ -87,6 +90,7 @@ public class IssueController {
         issue.setId(issueId);
         Issue issueById = issueService.findById(issueId);
         issue.setIssueCreator(issueById.getIssueCreator());
+        issue.setUsersObserving(issueById.getUsersObserving());
         issue.setComments(issueById.getComments());
         issue.setProject(issueById.getProject());
         Issue savedIssue = issueService.save(issue);

@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.controllers.pathsConfig.Paths;
+import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.Project;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -29,6 +32,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class IssueControllerTest {
+
+    @Mock
+    Authentication authentication;
+
+    @Mock
+    SecurityContext securityContext;
 
     @Mock
     IssueService issueService;
@@ -90,10 +99,13 @@ class IssueControllerTest {
 
     @Test
     void processAddingIssue() throws Exception {
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(new ApplicationUser(User.builder().build()));
+
         Issue issue = Issue.builder().id(2L).build();
 
         when(issueService.save(any())).thenReturn(issue);
-        when(issueService.findById(anyLong())).thenReturn(returnedIssue);
         when(projectService.findById(anyLong())).thenReturn(Project.builder().id(1L).build());
 
         mockMvc.perform(post(Paths.PROJECT_ISSUE_PATH.getPath() + "/new", 1))

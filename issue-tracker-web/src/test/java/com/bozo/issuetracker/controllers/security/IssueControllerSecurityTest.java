@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -108,7 +109,7 @@ public class IssueControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUserRoleAdmin
+    @WithUserDetails(value = "user1", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void processAddingIssueAdmin() throws Exception {
         Project project = Project.builder().id(1L).build();
@@ -125,7 +126,7 @@ public class IssueControllerSecurityTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUserRoleUser
+    @WithUserDetails(value = "user2", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void processAddingIssueUser() throws Exception {
         Project project = Project.builder().id(1L).build();
