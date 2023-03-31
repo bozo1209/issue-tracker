@@ -5,6 +5,7 @@ import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.springdatajpa.TeamSDJpaService;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ public class TeamControllerSecurityTest {
 
     @MockBean
     private TeamSDJpaService teamService;
+
+    @MockBean
+    private ApplicationUserDetailsService applicationUserDetailsService;
 
     @WithMockUserRoleAdmin
     @Test

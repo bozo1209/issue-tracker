@@ -5,6 +5,9 @@ import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
+import com.bozo.issuetracker.details.user.ApplicationUser;
+import com.bozo.issuetracker.enums.UserRoles;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.model.User;
@@ -36,6 +39,9 @@ public class IssueControllerSecurityTest {
 
     @MockBean
     private ProjectSDJpaService projectService;
+
+    @MockBean
+    private ApplicationUserDetailsService applicationUserDetailsService;
 
     @WithMockUserRoleAdmin
     @Test
@@ -121,6 +127,8 @@ public class IssueControllerSecurityTest {
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(issueService.save(any())).thenReturn(issue);
         when(projectService.findById(anyLong())).thenReturn(project);
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.ADMIN).build()));
 
         mockMvc.perform(post(Paths.PROJECT_ISSUE_PATH.getPath() + "/new", 1))
                 .andExpect(status().is3xxRedirection());
@@ -138,6 +146,8 @@ public class IssueControllerSecurityTest {
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(issueService.save(any())).thenReturn(issue);
         when(projectService.findById(anyLong())).thenReturn(project);
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.USER).build()));
 
         mockMvc.perform(post(Paths.PROJECT_ISSUE_PATH.getPath() + "/new", 1))
                 .andExpect(status().is3xxRedirection());
