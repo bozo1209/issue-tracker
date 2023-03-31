@@ -1,6 +1,7 @@
 package com.bozo.issuetracker.config;
 
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
+import com.bozo.issuetracker.filter.VerifyAccessFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @AllArgsConstructor
 @Configuration
@@ -29,6 +31,7 @@ public class ApplicationSecurityConfig {
                         .anyRequest().authenticated());
         http.formLogin();
         http.authenticationProvider(authenticationProvider());
+        http.addFilterAfter(new VerifyAccessFilter(applicationUserDetailsService), UsernamePasswordAuthenticationFilter.class);
         http.csrf().ignoringRequestMatchers(PathRequest.toH2Console()).and().headers().frameOptions().sameOrigin(); // allow opening h2-console, fo dev purpose only
         return http.build();
     }

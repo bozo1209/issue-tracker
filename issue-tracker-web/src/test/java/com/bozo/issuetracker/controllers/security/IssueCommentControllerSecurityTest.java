@@ -5,6 +5,9 @@ import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
+import com.bozo.issuetracker.details.user.ApplicationUser;
+import com.bozo.issuetracker.enums.UserRoles;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
 import com.bozo.issuetracker.model.User;
@@ -37,6 +40,9 @@ public class IssueCommentControllerSecurityTest {
     @MockBean
     private IssueSDJpaService issueService;
 
+    @MockBean
+    private ApplicationUserDetailsService applicationUserDetailsService;
+
     @WithUserDetails(value = "user1", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void processAddingCommentAdmin() throws Exception {
@@ -45,6 +51,7 @@ public class IssueCommentControllerSecurityTest {
 
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(comment);
+        when(applicationUserDetailsService.loadUserByUsername(anyString())).thenReturn(new ApplicationUser(User.builder().role(UserRoles.ADMIN).build()));
 
         mockMvc.perform(post(Paths.COMMENT_PATH.getPath() + "/new", 1))
                 .andExpect(status().is3xxRedirection());
@@ -58,6 +65,7 @@ public class IssueCommentControllerSecurityTest {
 
         when(issueService.findById(anyLong())).thenReturn(issue);
         when(commentService.save(any())).thenReturn(comment);
+        when(applicationUserDetailsService.loadUserByUsername(anyString())).thenReturn(new ApplicationUser(User.builder().role(UserRoles.USER).build()));
 
         mockMvc.perform(post(Paths.COMMENT_PATH.getPath() + "/new", 1))
                 .andExpect(status().is3xxRedirection());

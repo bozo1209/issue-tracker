@@ -5,6 +5,7 @@ import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.springdatajpa.ProjectSDJpaService;
@@ -30,6 +31,9 @@ public class ProjectControllerSecurityTest {
 
     @MockBean
     private ProjectSDJpaService projectService;
+
+    @MockBean
+    private ApplicationUserDetailsService applicationUserDetailsService;
 
     @WithMockUserRoleAdmin
     @Test

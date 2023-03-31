@@ -5,7 +5,10 @@ import com.bozo.issuetracker.controllers.pathsConfig.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
+import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.details.user.EncodePasswordForUser;
+import com.bozo.issuetracker.enums.UserRoles;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.springdatajpa.UserSDJpaService;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,9 @@ public class UserControllerSecurityTest {
     @MockBean
     private EncodePasswordForUser encodePasswordForUser;
 
+    @MockBean
+    private ApplicationUserDetailsService applicationUserDetailsService;
+
     @WithMockUserRoleAdmin
     @Test
     public void allUserListAdmin() throws Exception {
@@ -59,6 +65,7 @@ public class UserControllerSecurityTest {
     @Test
     public void showUserByIdAdmin() throws Exception {
         when(userService.findById(anyLong())).thenReturn(User.builder().build());
+
         mockMvc.perform(get(Paths.USER_PATH.getPath() +"/1"))
                 .andExpect(status().isOk());
     }
@@ -67,6 +74,7 @@ public class UserControllerSecurityTest {
     @Test
     public void showUserByIdUser() throws Exception {
         when(userService.findById(anyLong())).thenReturn(User.builder().build());
+
         mockMvc.perform(get(Paths.USER_PATH.getPath() +"/1"))
                 .andExpect(status().isOk());
     }
@@ -128,6 +136,7 @@ public class UserControllerSecurityTest {
     @Test
     public void editUserAdmin() throws Exception {
         User user2 = User.builder().id(2L).build();
+
         when(userService.findById(anyLong())).thenReturn(user2);
 
         mockMvc.perform(get(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
@@ -138,7 +147,10 @@ public class UserControllerSecurityTest {
     @Test
     public void editUserUserWithSameId() throws Exception {
         User user2 = User.builder().id(2L).build();
+
         when(userService.findById(anyLong())).thenReturn(user2);
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.USER).build()));
 
         mockMvc.perform(get(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().isOk());
@@ -147,6 +159,9 @@ public class UserControllerSecurityTest {
     @WithUserDetails(value = "user3", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void editUserUserWithDifferentId() throws Exception {
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.USER).build()));
+
         mockMvc.perform(get(Paths.USER_PATH.getPath() + "/2/edit"))
                 .andExpect(status().isForbidden());
     }
@@ -161,6 +176,7 @@ public class UserControllerSecurityTest {
     @Test
     public void processEditingUserAdmin() throws Exception {
         User user2 = User.builder().id(2L).password("pass").build();
+
         when(userService.findById(anyLong())).thenReturn(user2);
         when(userService.save(any())).thenReturn(user2);
         when(encodePasswordForUser.encodePasswordForUser(anyString())).thenReturn("pass");
@@ -173,9 +189,12 @@ public class UserControllerSecurityTest {
     @Test
     public void processEditingUserUserWithSameId() throws Exception {
         User user2 = User.builder().id(2L).build();
+
         when(userService.findById(anyLong())).thenReturn(user2);
         when(userService.save(any())).thenReturn(user2);
         when(encodePasswordForUser.encodePasswordForUser(anyString())).thenReturn("pass");
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.USER).build()));
 
         mockMvc.perform(post(Paths.USER_PATH.getPath() + "/{userId}/edit", user2.getId()))
                 .andExpect(status().is3xxRedirection());
@@ -184,6 +203,9 @@ public class UserControllerSecurityTest {
     @WithUserDetails(value = "user3", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void processEditingUserUserWithDifferentId() throws Exception {
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.USER).build()));
+
         mockMvc.perform(post(Paths.USER_PATH.getPath() + "/2/edit"))
                 .andExpect(status().isForbidden());
 
@@ -202,7 +224,9 @@ public class UserControllerSecurityTest {
     @Test
     public void deleteUserAmin() throws Exception {
         User user1 = User.builder().id(1L).build();
+
         when(userService.findById(anyLong())).thenReturn(user1);
+
         mockMvc.perform(get(Paths.USER_PATH.getPath() + "/{userId}/delete", user1.getId()))
                 .andExpect(status().is3xxRedirection());
     }
