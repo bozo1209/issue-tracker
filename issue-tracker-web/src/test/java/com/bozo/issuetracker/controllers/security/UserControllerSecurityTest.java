@@ -1,10 +1,10 @@
 package com.bozo.issuetracker.controllers.security;
 
 import com.bozo.issuetracker.controllers.UserController;
-import com.bozo.issuetracker.controllers.pathsConfig.Paths;
+import com.bozo.issuetracker.controllers.config.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
-import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.controllers.config.ApplicationSecurityTestConfig;
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.details.user.EncodePasswordForUser;
@@ -237,7 +237,7 @@ public class UserControllerSecurityTest {
         mockMvc.perform(get(Paths.USER_PATH.getPath() + "/1/delete"))
                 .andExpect(status().isForbidden());
 
-        verify(userService, times(0)).deleteById(anyLong());
+        verify(userService, times(0)).delete(any());
     }
 
     @Test
@@ -245,6 +245,6 @@ public class UserControllerSecurityTest {
         mockMvc.perform(get(Paths.USER_PATH.getPath() + "/1/delete"))
                 .andExpect(status().is3xxRedirection());
 
-        verify(userService, times(0)).deleteById(anyLong());
+        verify(userService, times(0)).delete(any());
     }
 }

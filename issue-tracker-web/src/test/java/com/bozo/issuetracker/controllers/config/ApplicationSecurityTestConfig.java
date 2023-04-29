@@ -1,4 +1,4 @@
-package com.bozo.issuetracker.controllers.security.config;
+package com.bozo.issuetracker.controllers.config;
 
 import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.enums.UserRoles;

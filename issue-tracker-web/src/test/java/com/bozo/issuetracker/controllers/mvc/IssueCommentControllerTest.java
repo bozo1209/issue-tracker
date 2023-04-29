@@ -1,6 +1,7 @@
-package com.bozo.issuetracker.controllers;
+package com.bozo.issuetracker.controllers.mvc;
 
-import com.bozo.issuetracker.controllers.pathsConfig.Paths;
+import com.bozo.issuetracker.controllers.IssueCommentController;
+import com.bozo.issuetracker.controllers.config.Paths;
 import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.model.IssueComment;
@@ -21,7 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;

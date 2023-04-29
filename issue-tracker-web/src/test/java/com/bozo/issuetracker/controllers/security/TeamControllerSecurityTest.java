@@ -1,10 +1,10 @@
 package com.bozo.issuetracker.controllers.security;
 
 import com.bozo.issuetracker.controllers.TeamController;
-import com.bozo.issuetracker.controllers.pathsConfig.Paths;
+import com.bozo.issuetracker.controllers.config.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
-import com.bozo.issuetracker.controllers.security.config.ApplicationSecurityTestConfig;
+import com.bozo.issuetracker.controllers.config.ApplicationSecurityTestConfig;
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.springdatajpa.TeamSDJpaService;
