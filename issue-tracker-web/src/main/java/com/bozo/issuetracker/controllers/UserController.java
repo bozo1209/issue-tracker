@@ -94,7 +94,7 @@ public class UserController {
         User userById = userService.findById(userId);
         userById.getIssuesCreated().forEach(issue -> issue.setIssueCreator(null));
         userById.getCommentsCreated().forEach(comment -> comment.setCommentCreator(null));
-        userService.deleteById(userId);
+        userService.delete(userById);
         return "redirect:/user/all";
     }
 }

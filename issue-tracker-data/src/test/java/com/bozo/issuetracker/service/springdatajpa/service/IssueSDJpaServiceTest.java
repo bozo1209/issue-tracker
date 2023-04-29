@@ -1,7 +1,8 @@
-package com.bozo.issuetracker.service.springdatajpa;
+package com.bozo.issuetracker.service.springdatajpa.service;
 
 import com.bozo.issuetracker.model.Issue;
 import com.bozo.issuetracker.repository.IssueRepository;
+import com.bozo.issuetracker.service.springdatajpa.IssueSDJpaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

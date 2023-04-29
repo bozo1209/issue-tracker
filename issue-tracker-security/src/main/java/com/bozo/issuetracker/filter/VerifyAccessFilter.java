@@ -26,19 +26,6 @@ public class VerifyAccessFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null) {
-//            UserDetails userDetails = applicationUserDetailsService.loadUserByUsername(authentication.getName());
-//            if (userDetails instanceof ApplicationUser) {
-//                User byUserName = ((ApplicationUser) userDetails).getUser();
-//                if (authentication.getPrincipal() instanceof ApplicationUser) {
-//                    User user = ((ApplicationUser) authentication.getPrincipal()).getUser();
-//                    if (user.getRole() != byUserName.getRole()) {
-//                        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities()));
-//                    }
-//                }
-//            }
-//        }
 
         Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication()).ifPresent(auth -> {
             if (auth.getPrincipal() instanceof ApplicationUser) {

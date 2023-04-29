@@ -1,4 +1,4 @@
-package com.bozo.issuetracker.controllers.pathsConfig;
+package com.bozo.issuetracker.controllers.config;
 
 public enum Paths {
     USER_PATH("/user"),
