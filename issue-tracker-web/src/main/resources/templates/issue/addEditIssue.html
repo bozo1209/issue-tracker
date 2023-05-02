@@ -14,9 +14,9 @@
     <label>description</label>
     <input type="text" th:field="*{description}">
 </div>
-<div>
+<div th:if="${issue['new']}" th:object="${issueComment}">
     <label>comments</label>
-    <textarea th:field="*{comments}" rows="5" cols="50"></textarea>
+    <textarea th:field="*{comment}" rows="5" cols="50"></textarea>
 </div>
     <button type="submit" th:with="text=${issue['new']} ? 'Add Issue' : 'Update Issue'" th:text="${text}">add new</button>
 </form>
