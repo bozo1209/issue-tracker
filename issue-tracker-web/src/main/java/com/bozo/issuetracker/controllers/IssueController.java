@@ -19,6 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @PreAuthorizeRoleAdmin
 @AllArgsConstructor
@@ -53,12 +55,13 @@ public class IssueController {
     public String addNewIssue(@PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("issue", Issue.builder().build());
+        model.addAttribute("issueComment", IssueComment.builder().build());
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
 // admin + user
     @PreAuthorizeRoleAdminOrRoleUser
     @PostMapping("/project/{projectId}/issue/new")
-    public String processAddingIssue(@Valid Issue issue, @PathVariable Long projectId, BindingResult result){
+    public String processAddingIssue(@Valid Issue issue, @Valid IssueComment issueComment, @PathVariable Long projectId, BindingResult result){
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_ISSUE.getPath();
         }
@@ -66,6 +69,16 @@ public class IssueController {
         User loggedUser = ((ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         issue.setIssueCreator(loggedUser);
         loggedUser.getIssuesObserve().add(issue);
+
+        Optional.ofNullable(issueComment.getComment()).ifPresent(comment -> {
+            if (!comment.isEmpty()){
+                issueComment.setCommentCreator(loggedUser);
+                loggedUser.getCommentsCreated().add(issueComment);
+                issueComment.setIssue(issue);
+                issue.getComments().add(issueComment);
+            }
+        });
+
         Project projectById = projectService.findById(projectId);
         projectById.getIssues().add(issue);
         issue.setProject(projectById);
