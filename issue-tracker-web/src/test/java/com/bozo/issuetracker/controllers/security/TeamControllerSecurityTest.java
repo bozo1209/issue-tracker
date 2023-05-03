@@ -7,6 +7,7 @@ import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUse
 import com.bozo.issuetracker.controllers.config.ApplicationSecurityTestConfig;
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.model.Team;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.springdatajpa.TeamSDJpaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,6 +175,8 @@ public class TeamControllerSecurityTest {
     @Test
     public void deleteTeamAdmin() throws Exception {
         Team team = Team.builder().id(1L).build();
+        when(teamService.findById(anyLong())).thenReturn(team);
+
         mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/delete", team.getId()))
                 .andExpect(status().is3xxRedirection());
     }
