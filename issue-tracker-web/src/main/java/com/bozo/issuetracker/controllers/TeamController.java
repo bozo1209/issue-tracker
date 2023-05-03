@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RequestMapping("/team")
 @Controller
@@ -86,6 +88,11 @@ public class TeamController {
     @PreAuthorizeRoleAdmin
     @GetMapping("/{teamId}/delete")
     public String deleteTeam(@PathVariable Long teamId){
+        Team teamById = teamService.findById(teamId);
+        Optional.ofNullable(teamById.getLeader()).ifPresent(leader -> leader.setLeaderOfTeam(null));
+        teamById.setLeader(null);
+        teamById.getMembers().forEach(user -> user.setMemberOfTeam(null));
+        teamById.getProjects().forEach(project -> project.setAssignedTeam(null));
         teamService.deleteById(teamId);
         return "redirect:/team/all";
     }

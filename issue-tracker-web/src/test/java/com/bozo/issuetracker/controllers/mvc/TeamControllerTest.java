@@ -4,6 +4,7 @@ import com.bozo.issuetracker.controllers.TeamController;
 import com.bozo.issuetracker.controllers.config.Paths;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Team;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.TeamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,6 +116,8 @@ class TeamControllerTest {
 
     @Test
     void deleteTeam() throws Exception {
+        when(teamService.findById(anyLong())).thenReturn(returnedTeam);
+
         mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/delete", returnedTeam.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/team/all"));
