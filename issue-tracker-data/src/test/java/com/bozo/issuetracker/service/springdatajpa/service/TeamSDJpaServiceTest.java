@@ -32,16 +32,16 @@ class TeamSDJpaServiceTest {
     TeamSDJpaService service;
 
     Team returnedTeam;
+    List<Team> returnedTeamList;
 
     @BeforeEach
     void setUp() {
         returnedTeam = Team.builder().id(TEAM_ID).teamName(TEAM_NAME).build();
+        returnedTeamList = List.of(returnedTeam);
     }
 
     @Test
     void findAll() {
-        List<Team> returnedTeamList = List.of(returnedTeam);
-
         when(teamRepository.findAll()).thenReturn(returnedTeamList);
 
         List<Team> teamList = service.findAll();
@@ -74,6 +74,18 @@ class TeamSDJpaServiceTest {
         assertNull(team.getId());
 
         verify(teamRepository).findById(anyLong());
+    }
+
+    @Test
+    void findByLeaderIdOrLeaderIsNullById(){
+        when(teamRepository.findByLeaderIdOrLeaderIsNull(anyLong())).thenReturn(returnedTeamList);
+
+        List<Team> teamList = service.findByLeaderIdOrLeaderIsNull(anyLong());
+
+        assertNotNull(teamList);
+        assertEquals(1, teamList.size());
+
+        verify(teamRepository).findByLeaderIdOrLeaderIsNull(anyLong());
     }
 
     @Test

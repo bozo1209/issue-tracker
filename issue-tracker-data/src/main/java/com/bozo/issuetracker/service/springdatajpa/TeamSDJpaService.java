@@ -25,6 +25,11 @@ public class TeamSDJpaService implements TeamService {
     }
 
     @Override
+    public List<Team> findByLeaderIdOrLeaderIsNull(Long leaderId) {
+        return teamRepository.findByLeaderIdOrLeaderIsNull(leaderId);
+    }
+
+    @Override
     public Team save(Team object) {
         return teamRepository.save(object);
     }
@@ -38,4 +43,5 @@ public class TeamSDJpaService implements TeamService {
     public void deleteById(Long id) {
         teamRepository.deleteById(id);
     }
+
 }

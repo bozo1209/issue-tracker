@@ -30,7 +30,6 @@ public class UserSDJpaService implements UserService {
     @Cacheable(cacheNames = "UserCacheByName", key = "#userName")
     @Override
     public User findByUserName(String userName) {
-        System.out.println("********check************");
         return userRepository.findByUserName(userName).orElseGet(User::new);
     }
 

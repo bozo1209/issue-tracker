@@ -6,7 +6,6 @@ import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrUserWithSameId;
 import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.enums.UserRoles;
-import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.TeamService;
 import com.bozo.issuetracker.service.UserService;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @RequestMapping("/user")
 @Controller
@@ -56,6 +56,7 @@ public class UserController {
         model.addAttribute("user", User.builder().build());
         model.addAttribute("roleList", Arrays.asList(UserRoles.values()));
         model.addAttribute("teamList", teamService.findAll());
+        model.addAttribute("leaderTeamList", teamService.findByLeaderIdOrLeaderIsNull(null));
         return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 // admin
@@ -76,6 +77,7 @@ public class UserController {
         model.addAttribute("user", userService.findById(userId));
         model.addAttribute("roleList", Arrays.asList(UserRoles.values()));
         model.addAttribute("teamList", teamService.findAll());
+        model.addAttribute("leaderTeamList", teamService.findByLeaderIdOrLeaderIsNull(userId));
         return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 // user with id + admin
@@ -90,6 +92,14 @@ public class UserController {
         userById.setPassword(encodePasswordForUser.encodePasswordForUser(user.getPassword()));
         userById.setRole(user.getRole());
         userById.setMemberOfTeam(user.getMemberOfTeam());
+        Optional.ofNullable(user.getLeaderOfTeam()).ifPresentOrElse(leaderTeam -> {
+            userById.setLeaderOfTeam(leaderTeam);
+            Optional.ofNullable(user.getMemberOfTeam()).ifPresentOrElse(memberTeam -> {
+                if (!leaderTeam.getTeamName().equals(memberTeam.getTeamName())){
+                    userById.setMemberOfTeam(leaderTeam);
+                }
+            }, () -> userById.setMemberOfTeam(leaderTeam));
+        }, () -> userById.setLeaderOfTeam(null));
         User savedUser = userService.save(userById);
         return "redirect:/user/" + savedUser.getId();
     }
