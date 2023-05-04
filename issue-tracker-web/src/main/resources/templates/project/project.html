@@ -9,6 +9,9 @@
     <a th:href="@{/project/new}" th:text="'add new'"></a>
 </div>
 <div>
+    <a th:href="@{/project/__${project.id}__/issue/new}" th:text="'add new issue'"></a>
+</div>
+<div>
     <a th:href="@{/project/{id}/edit(id=${project.id})}" th:text="edit"></a>
 </div>
 <div>
