@@ -36,7 +36,7 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "leader_of_team_id"))
     private Team leaderOfTeam;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_of_team_id")
     private Team memberOfTeam;
 

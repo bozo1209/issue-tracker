@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    List<Team> findByLeaderIsNull();
+    List<Team> findByLeaderIdOrLeaderIsNull(Long leaderId);
 }

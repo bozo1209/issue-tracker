@@ -77,15 +77,15 @@ class TeamSDJpaServiceTest {
     }
 
     @Test
-    void findByLeaderIsNull(){
-        when(teamRepository.findByLeaderIsNull()).thenReturn(returnedTeamList);
+    void findByLeaderIdOrLeaderIsNullById(){
+        when(teamRepository.findByLeaderIdOrLeaderIsNull(anyLong())).thenReturn(returnedTeamList);
 
-        List<Team> teamList = service.findByLeaderIsNull();
+        List<Team> teamList = service.findByLeaderIdOrLeaderIsNull(anyLong());
 
         assertNotNull(teamList);
         assertEquals(1, teamList.size());
 
-        verify(teamRepository).findByLeaderIsNull();
+        verify(teamRepository).findByLeaderIdOrLeaderIsNull(anyLong());
     }
 
     @Test

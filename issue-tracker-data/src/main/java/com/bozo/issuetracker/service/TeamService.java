@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TeamService extends CrudService<Team, Long> {
 
-    List<Team> findByLeaderIsNull();
+    List<Team> findByLeaderIdOrLeaderIsNull(Long leaderId);
 }

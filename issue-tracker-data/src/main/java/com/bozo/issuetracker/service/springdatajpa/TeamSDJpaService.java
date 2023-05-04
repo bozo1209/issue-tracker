@@ -25,8 +25,8 @@ public class TeamSDJpaService implements TeamService {
     }
 
     @Override
-    public List<Team> findByLeaderIsNull() {
-        return teamRepository.findByLeaderIsNull();
+    public List<Team> findByLeaderIdOrLeaderIsNull(Long leaderId) {
+        return teamRepository.findByLeaderIdOrLeaderIsNull(leaderId);
     }
 
     @Override
