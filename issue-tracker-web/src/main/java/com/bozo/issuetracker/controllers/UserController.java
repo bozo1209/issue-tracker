@@ -6,7 +6,9 @@ import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrUserWithSameId;
 import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.enums.UserRoles;
+import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.model.User;
+import com.bozo.issuetracker.service.TeamService;
 import com.bozo.issuetracker.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 public class UserController {
 
     private final UserService userService;
+    private final TeamService teamService;
     private final EncodePasswordForUser encodePasswordForUser;
 
     @PreAuthorizeRoleAdminOrRoleUser
@@ -52,6 +55,7 @@ public class UserController {
     public String addNewUser(Model model){
         model.addAttribute("user", User.builder().build());
         model.addAttribute("roleList", Arrays.asList(UserRoles.values()));
+        model.addAttribute("teamList", teamService.findAll());
         return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 // admin
@@ -71,6 +75,7 @@ public class UserController {
     public String editUser(@PathVariable Long userId, Model model){
         model.addAttribute("user", userService.findById(userId));
         model.addAttribute("roleList", Arrays.asList(UserRoles.values()));
+        model.addAttribute("teamList", teamService.findAll());
         return HTMLPaths.ADD_EDIT_USER.getPath();
     }
 // user with id + admin
@@ -84,6 +89,7 @@ public class UserController {
         userById.setUserName(user.getUserName());
         userById.setPassword(encodePasswordForUser.encodePasswordForUser(user.getPassword()));
         userById.setRole(user.getRole());
+        userById.setMemberOfTeam(user.getMemberOfTeam());
         User savedUser = userService.save(userById);
         return "redirect:/user/" + savedUser.getId();
     }

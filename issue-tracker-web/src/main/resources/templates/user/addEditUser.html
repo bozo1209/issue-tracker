@@ -21,6 +21,13 @@
             <option th:each="role : ${roleList}" th:value="${role}" th:text="${role}"></option>
         </select>
     </div>
+    <div>
+        <label>team</label>
+        <select th:field="*{memberOfTeam}">
+            <option value=" "></option>
+            <option th:each="team : ${teamList}" th:value="${team.id}" th:text="${team.teamName}"></option>
+        </select>
+    </div>
     <button type="submit" th:with="text=${user['new']} ? 'Add User' : 'Update User'" th:text="${text}">add</button>
 </form>
 </body>
