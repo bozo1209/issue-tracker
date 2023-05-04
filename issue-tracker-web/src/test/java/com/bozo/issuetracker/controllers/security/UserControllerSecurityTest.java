@@ -10,6 +10,7 @@ import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.enums.UserRoles;
 import com.bozo.issuetracker.model.User;
+import com.bozo.issuetracker.service.springdatajpa.TeamSDJpaService;
 import com.bozo.issuetracker.service.springdatajpa.UserSDJpaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class UserControllerSecurityTest {
 
     @MockBean
     private UserSDJpaService userService;
+
+    @MockBean
+    private TeamSDJpaService teamService;
 
     @MockBean
     private EncodePasswordForUser encodePasswordForUser;
