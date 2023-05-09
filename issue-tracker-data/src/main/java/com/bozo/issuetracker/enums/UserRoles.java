@@ -1,5 +1,5 @@
 package com.bozo.issuetracker.enums;
 
 public enum UserRoles {
-    USER, ADMIN
+    USER, TEAM_LEADER, ADMIN
 }
