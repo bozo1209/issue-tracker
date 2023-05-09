@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-public @interface PreAuthorizeRoleAdminOrRoleUser {
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TEAM_LEADER', 'ROLE_USER')")
+public @interface PreAuthorizeWithAnyRole {
 }
