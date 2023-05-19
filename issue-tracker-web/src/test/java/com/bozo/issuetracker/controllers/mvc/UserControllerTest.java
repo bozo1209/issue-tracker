@@ -4,7 +4,6 @@ import com.bozo.issuetracker.controllers.UserController;
 import com.bozo.issuetracker.controllers.config.Paths;
 import com.bozo.issuetracker.details.user.EncodePasswordForUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
-import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.TeamService;
 import com.bozo.issuetracker.service.UserService;
