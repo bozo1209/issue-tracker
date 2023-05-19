@@ -50,4 +50,7 @@ public class UserSDJpaService implements UserService {
         userRepository.deleteById(id);
     }
 
+    @CacheEvict(cacheNames = "UserCacheByName", key = "#user.userName", beforeInvocation = true)
+    public void updateUserInCache(User user){
+    }
 }
