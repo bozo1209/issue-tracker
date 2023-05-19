@@ -46,6 +46,12 @@ public class ApplicationSecurityTestConfig {
                             .userName("user3")
                             .role(UserRoles.USER)
                             .password("{noop}user3")
+                            .build()),
+                    new ApplicationUser(User.builder()
+                            .id(4L)
+                            .userName("user4")
+                            .role(UserRoles.TEAM_LEADER)
+                            .password("{noop}user4")
                             .build()))
                 .filter(appUser ->
                         appUser
