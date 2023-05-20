@@ -1,7 +1,7 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
-import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
+import com.bozo.issuetracker.annotation.PreAuthorizeWithAnyRole;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.service.ProjectService;
@@ -20,34 +20,34 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder){
         dataBinder.setDisallowedFields("id");
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/all")
     public String allProjectList(Model model){
         model.addAttribute("projectList", projectService.findAll());
         return HTMLPaths.PROJECT_LIST.getPath();
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/{projectId}")
     public String showProject(@PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
         return HTMLPaths.PROJECT.getPath();
     }
-// admin
+// admin + team leader of team that gets project
     @PreAuthorizeRoleAdmin
     @GetMapping("/new")
     public String addNewProject(Model model){
         model.addAttribute("project", Project.builder().build());
         return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
-// admin
+// admin + team leader of team that gets project
     @PreAuthorizeRoleAdmin
     @PostMapping("/new")
     public String processAddingProject(@Valid Project project, BindingResult result){
@@ -61,14 +61,14 @@ public class ProjectController {
         Project savedProject = projectService.save(project);
         return "redirect:/project/" + savedProject.getId();
     }
-// admin
+// admin + team leader of team that gets project
     @PreAuthorizeRoleAdmin
     @GetMapping("/{projectId}/edit")
     public String editProject(@PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
         return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
-// admin
+// admin + team leader of team that gets project
     @PreAuthorizeRoleAdmin
     @PostMapping("/{projectId}/edit")
     public String processEditingProject(@Valid Project project, @PathVariable Long projectId, BindingResult result){
