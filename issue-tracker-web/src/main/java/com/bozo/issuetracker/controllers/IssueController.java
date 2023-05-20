@@ -1,7 +1,7 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
-import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
+import com.bozo.issuetracker.annotation.PreAuthorizeWithAnyRole;
 import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Issue;
@@ -28,29 +28,29 @@ public class IssueController {
 
     private final IssueService issueService;
     private final ProjectService projectService;
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder){
         dataBinder.setDisallowedFields("id");
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/issue/all")
     public String allIssueList(Model model){
         model.addAttribute("issueList", issueService.findAll());
         return HTMLPaths.ISSUE_LIST.getPath();
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/issue/{issueId}")
     public String showIssue(@PathVariable Long issueId, Model model){
         model.addAttribute("issue", issueService.findById(issueId));
         model.addAttribute("comment", IssueComment.builder().build());
         return HTMLPaths.ISSUE.getPath();
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/project/{projectId}/issue/new")
     public String addNewIssue(@PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
@@ -58,8 +58,8 @@ public class IssueController {
         model.addAttribute("issueComment", IssueComment.builder().build());
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @PostMapping("/project/{projectId}/issue/new")
     public String processAddingIssue(@Valid Issue issue, @Valid IssueComment issueComment, @PathVariable Long projectId, BindingResult result){
         if (result.hasErrors()){
@@ -85,16 +85,16 @@ public class IssueController {
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/project/{projectId}/issue/{issueId}/edit")
     public String editIssue(@PathVariable Long issueId, @PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("issue", issueService.findById(issueId));
         return HTMLPaths.ADD_EDIT_ISSUE.getPath();
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @PostMapping("/project/{projectId}/issue/{issueId}/edit")
     public String processEditingIssue(@Valid Issue issue, @PathVariable Long issueId, @PathVariable Long projectId, BindingResult result){
         if (result.hasErrors()){
@@ -109,8 +109,8 @@ public class IssueController {
         Issue savedIssue = issueService.save(issue);
         return "redirect:/issue/" + savedIssue.getId();
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/issue/{issueId}/delete")
     public String deleteIssue(@PathVariable Long issueId){
         Issue issueById = issueService.findById(issueId);

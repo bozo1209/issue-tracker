@@ -1,7 +1,7 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
-import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminOrRoleUser;
+import com.bozo.issuetracker.annotation.PreAuthorizeWithAnyRole;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.TeamService;
@@ -24,20 +24,20 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @PreAuthorizeRoleAdminOrRoleUser
+    @PreAuthorizeWithAnyRole
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder){
         dataBinder.setDisallowedFields("id");
     }
-// admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+// admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/all")
     public String allTeamList(Model model){
         model.addAttribute("teamList", teamService.findAll());
         return HTMLPaths.TEAM_LIST.getPath();
     }
-    // admin + user
-    @PreAuthorizeRoleAdminOrRoleUser
+//     admin + team leader + user
+    @PreAuthorizeWithAnyRole
     @GetMapping("/{teamId}")
     public String showTeam(@PathVariable Long teamId, Model model){
         model.addAttribute("team", teamService.findById(teamId));

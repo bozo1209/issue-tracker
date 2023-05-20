@@ -16,7 +16,7 @@ public class Team extends BaseEntity{
     @OneToOne(mappedBy = "leaderOfTeam")
     private User leader;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "memberOfTeam")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER, mappedBy = "memberOfTeam")
     private Set<User> members = new HashSet<>();
 
     @Column(name = "team_name")

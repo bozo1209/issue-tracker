@@ -1,6 +1,6 @@
-package com.bozo.issuetracker.annotation;
+package com.bozo.issuetracker.controllers.security.annotation;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-public @interface PreAuthorizeRoleAdminOrRoleUser {
+@WithMockUser(roles = "TEAM_LEADER")
+public @interface WithMockUserRoleTeamLeader {
 }
