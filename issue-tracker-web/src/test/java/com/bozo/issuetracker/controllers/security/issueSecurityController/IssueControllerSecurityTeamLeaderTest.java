@@ -46,14 +46,14 @@ public class IssueControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleUser
     @Test
-    public void allIssueListUser() throws Exception {
+    public void allIssueListTeamLeader() throws Exception {
         mockMvc.perform(get(Paths.ISSUE_PATH.getPath() + "/all"))
                 .andExpect(status().isOk());
     }
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void showIssueUser() throws Exception {
+    public void showIssueTeamLeader() throws Exception {
         Issue issue = Issue.builder().id(1L).project(Project.builder().id(1L).build()).build();
 
         when(issueService.findById(anyLong())).thenReturn(issue);
@@ -64,7 +64,7 @@ public class IssueControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void addNewIssueUser() throws Exception {
+    public void addNewIssueTeamLeader() throws Exception {
         when(projectService.findById(anyLong())).thenReturn(Project.builder().id(1L).build());
 
         mockMvc.perform(get(Paths.PROJECT_ISSUE_PATH.getPath() + "/new", 1))
@@ -73,7 +73,7 @@ public class IssueControllerSecurityTeamLeaderTest {
 
     @WithUserDetails(value = "user-team_leader", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
-    public void processAddingIssueUser() throws Exception {
+    public void processAddingIssueTeamLeader() throws Exception {
         Project project = Project.builder().id(1L).build();
         Issue issue = Issue.builder()
                 .id(1L)
@@ -92,7 +92,7 @@ public class IssueControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void editIssueUser() throws Exception {
+    public void editIssueTeamLeader() throws Exception {
         Issue issue = Issue.builder().id(1L).build();
 
         when(projectService.findById(anyLong())).thenReturn(Project.builder().id(1L).build());
@@ -104,7 +104,7 @@ public class IssueControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void processEditingIssueUser() throws Exception {
+    public void processEditingIssueTeamLeader() throws Exception {
         Issue issue = Issue.builder().id(1L).build();
 
         when(issueService.findById(anyLong())).thenReturn(issue);
@@ -116,7 +116,7 @@ public class IssueControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void deleteIssueUser() throws Exception {
+    public void deleteIssueTeamLeader() throws Exception {
         Issue issue = Issue.builder()
                 .id(1L)
                 .issueCreator(User.builder().build())

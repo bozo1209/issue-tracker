@@ -45,7 +45,7 @@ public class IssueCommentControllerSecurityTeamLeaderTest {
 
     @WithUserDetails(value = "user-team_leader", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
-    public void processAddingCommentAdmin() throws Exception {
+    public void processAddingCommentTeamLeader() throws Exception {
         Issue issue = Issue.builder().id(1L).build();
         IssueComment comment = IssueComment.builder().id(1L).build();
 
@@ -59,7 +59,7 @@ public class IssueCommentControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void processEditingCommentAdmin() throws Exception {
+    public void processEditingCommentTeamLeader() throws Exception {
         Issue issue = Issue.builder().id(1L).build();
         IssueComment comment = IssueComment.builder().id(1L).commentCreator(User.builder().build()).build();
 
@@ -73,7 +73,7 @@ public class IssueCommentControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void deleteCommentAdmin() throws Exception {
+    public void deleteCommentTeamLeader() throws Exception {
         IssueComment comment = IssueComment.builder().id(1L).build();
 
         when(issueService.findById(anyLong())).thenReturn(Issue.builder().build());

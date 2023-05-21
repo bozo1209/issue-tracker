@@ -25,7 +25,7 @@ public class IndexControllerSecurityTeamLeaderTest {
 
     @WithMockUserRoleTeamLeader
     @Test
-    public void indexPageUser() throws Exception{
+    public void indexPageTeamLeader() throws Exception{
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
