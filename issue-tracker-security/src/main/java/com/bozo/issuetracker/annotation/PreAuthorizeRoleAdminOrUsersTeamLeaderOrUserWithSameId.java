@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
         + "or (hasRole('ROLE_TEAM_LEADER') "
         + "and T(com.bozo.issuetracker.details.user.ApplicationUser)"
         + ".cast(principal).getUser().getMemberOfTeam().getMembers().stream()"
-        + ".map(T(com.bozo.issuetracker.config.SpELMethodsConfig)"
-        + ".userToUserId()).toList().contains(#userId)) "
+        + ".map(T(com.bozo.issuetracker.config.SpELMethodsConfig).userToUserId())"
+        + ".toList().contains(#userId)) "
         + "or T(com.bozo.issuetracker.details.user.ApplicationUser).cast(principal).getUser().getId() == #userId")
 public @interface PreAuthorizeRoleAdminOrUsersTeamLeaderOrUserWithSameId {
 }
