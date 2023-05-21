@@ -71,7 +71,7 @@ public class IssueControllerSecurityTeamLeaderTest {
                 .andExpect(status().isOk());
     }
 
-    @WithUserDetails(value = "user-team_leader", userDetailsServiceBeanName = "testUserDetailsService")
+    @WithUserDetails(value = "user-team_leader1", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void processAddingIssueTeamLeader() throws Exception {
         Project project = Project.builder().id(1L).build();

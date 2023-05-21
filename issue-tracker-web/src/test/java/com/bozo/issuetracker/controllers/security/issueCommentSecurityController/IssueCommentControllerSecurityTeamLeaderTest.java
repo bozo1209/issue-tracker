@@ -43,7 +43,7 @@ public class IssueCommentControllerSecurityTeamLeaderTest {
     @MockBean
     private ApplicationUserDetailsService applicationUserDetailsService;
 
-    @WithUserDetails(value = "user-team_leader", userDetailsServiceBeanName = "testUserDetailsService")
+    @WithUserDetails(value = "user-team_leader1", userDetailsServiceBeanName = "testUserDetailsService")
     @Test
     public void processAddingCommentTeamLeader() throws Exception {
         Issue issue = Issue.builder().id(1L).build();
