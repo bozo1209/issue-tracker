@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @PreAuthorize("hasRole('ROLE_ADMIN')"
         + " or (hasRole('ROLE_TEAM_LEADER')"
         + " and T(com.bozo.issuetracker.details.user.ApplicationUser)"
-        + ".cast(principal).getUser().getLeaderOfTeam().getId() == #teamId))")
+        + ".cast(principal).getUser().getLeaderOfTeam().getId() == #teamId)")
 public @interface PreAuthorizeRoleAdminTeamsTeamLeader {
 }
