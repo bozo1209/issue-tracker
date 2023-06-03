@@ -33,6 +33,11 @@ public class UserSDJpaService implements UserService {
         return userRepository.findByUserName(userName).orElseGet(User::new);
     }
 
+    @Override
+    public List<User> findByMemberOfTeamIsNull() {
+        return userRepository.findByMemberOfTeamIsNull();
+    }
+
     @CachePut(cacheNames = "UserCacheByName", key = "#result.userName")
     @Override
     public User save(User object) {
