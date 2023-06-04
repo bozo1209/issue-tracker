@@ -99,6 +99,20 @@ class UserSDJpaServiceTest {
     }
 
     @Test
+    void findByMemberOfTeamIsNull(){
+        List<User> returnedUserList = List.of(returnedUser);
+
+        when(userRepository.findByMemberOfTeamIsNull()).thenReturn(returnedUserList);
+
+        List<User> userList = service.findByMemberOfTeamIsNull();
+
+        assertNotNull(userList);
+        assertEquals(1, userList.size());
+
+        verify(userRepository).findByMemberOfTeamIsNull();
+    }
+
+    @Test
     void save() {
         String userName = "second";
         User userToSave = User.builder().id(2L).userName(userName).build();

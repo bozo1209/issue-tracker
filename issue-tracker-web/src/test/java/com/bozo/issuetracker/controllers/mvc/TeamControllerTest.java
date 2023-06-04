@@ -2,16 +2,20 @@ package com.bozo.issuetracker.controllers.mvc;
 
 import com.bozo.issuetracker.controllers.TeamController;
 import com.bozo.issuetracker.controllers.config.Paths;
+import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.TeamService;
+import com.bozo.issuetracker.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -29,6 +33,9 @@ class TeamControllerTest {
 
     @Mock
     TeamService teamService;
+
+    @Mock
+    UserService userService;
 
     @InjectMocks
     TeamController controller;
@@ -61,13 +68,16 @@ class TeamControllerTest {
     @Test
     void showTeam() throws Exception {
         when(teamService.findById(anyLong())).thenReturn(returnedTeam);
+        when(userService.findByMemberOfTeamIsNull()).thenReturn(List.of());
 
         mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}", returnedTeam.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(HTMLPaths.TEAM.getPath()))
-                .andExpect(model().attributeExists("team"));
+                .andExpect(model().attributeExists("team"))
+                .andExpect(model().attributeExists("usersWithoutTeam"));
 
         verifyNoMoreInteractions(teamService);
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -112,6 +122,29 @@ class TeamControllerTest {
                 .andExpect(view().name("redirect:/team/" + returnedTeam.getId()));
 
         verifyNoMoreInteractions(teamService);
+    }
+
+    @Test
+    void addUserToTeam() throws Exception {
+//        User leader = User.builder().id(1L).memberOfTeam(returnedTeam).leaderOfTeam(returnedTeam).build();
+//        User member = User.builder().id(2L).build();
+//        returnedTeam.getMembers().add(leader);
+//        returnedTeam.setLeader(leader);
+//        ApplicationUser applicationUser = new ApplicationUser(leader);
+        when(userService.findById(anyLong())).thenReturn(User.builder().build());
+        when(teamService.findById(anyLong())).thenReturn(returnedTeam);
+        when(teamService.save(any())).thenReturn(returnedTeam);
+//        when(userService);
+//        doNothing().when(userService).updateUserInCache(User.builder().userName("name").build());
+//        doAnswer(i -> {return null}).when(userService.updateUserInCache(User.builder().build()));
+//        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(new UsernamePasswordAuthenticationToken(applicationUser, applicationUser.getPassword(), applicationUser.getAuthorities()));
+
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/user/{userId}", returnedTeam.getId(), 1L))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/team/" + returnedTeam.getId()));
+
+        verifyNoMoreInteractions(teamService);
+        verifyNoMoreInteractions(userService);
     }
 
     @Test

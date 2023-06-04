@@ -56,6 +56,7 @@ public class ApplicationSecurityTestConfig {
                 .role(UserRoles.TEAM_LEADER)
                 .password("{noop}user4")
                 .memberOfTeam(team1)
+                .leaderOfTeam(team1)
                 .build();
         User teamLeader2 = User.builder()
                 .id(5L)
@@ -63,6 +64,7 @@ public class ApplicationSecurityTestConfig {
                 .role(UserRoles.TEAM_LEADER)
                 .password("{noop}user4")
                 .memberOfTeam(team2)
+                .leaderOfTeam(team2)
                 .build();
         team1.getMembers().add(user1);
         team1.getMembers().add(teamLeader1);
