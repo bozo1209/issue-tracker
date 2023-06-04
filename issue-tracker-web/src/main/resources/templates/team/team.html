@@ -25,6 +25,18 @@
     </ul>
 </div>
 <div>
+    <h3>add members to team:</h3>
+    <table>
+        <tr>
+            <th>user name</th>
+        </tr>
+        <tr th:each="user : ${usersWithoutTeam}">
+            <td th:text="${user.userName}"></td>
+            <td><a th:href="@{/team/{teamId}/user/{userId}(teamId=${team.id},userId=${user.id})}" th:text="'add user'"></a></td>
+        </tr>
+    </table>
+</div>
+<div>
     <h3>list of projects:</h3>
     <ul>
         <li th:each="project : ${team.projects}" th:text="${project?.projectName}">el</li>
