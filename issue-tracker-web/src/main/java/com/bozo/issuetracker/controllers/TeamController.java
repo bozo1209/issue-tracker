@@ -1,18 +1,28 @@
 package com.bozo.issuetracker.controllers;
 
 import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdmin;
+import com.bozo.issuetracker.annotation.PreAuthorizeRoleAdminTeamsTeamLeader;
 import com.bozo.issuetracker.annotation.PreAuthorizeWithAnyRole;
+import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
+import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Team;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.TeamService;
+import com.bozo.issuetracker.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -23,6 +33,8 @@ import java.util.Optional;
 public class TeamController {
 
     private final TeamService teamService;
+    private final UserService userService;
+    private final ApplicationUserDetailsService applicationUserDetailsService;
 
     @PreAuthorizeWithAnyRole
     @InitBinder
@@ -41,6 +53,9 @@ public class TeamController {
     @GetMapping("/{teamId}")
     public String showTeam(@PathVariable Long teamId, Model model){
         model.addAttribute("team", teamService.findById(teamId));
+        List<User> byMemberOfTeamIsNull = userService.findByMemberOfTeamIsNull();
+        model.addAttribute("usersWithoutTeam", byMemberOfTeamIsNull);
+        byMemberOfTeamIsNull.forEach(userService::updateUserInCache);
         return HTMLPaths.TEAM.getPath();
     }
 // admin
@@ -83,6 +98,27 @@ public class TeamController {
         team.setLeader(team.getLeader());
         Team savedTeam = teamService.save(team);
         return "redirect:/team/" + savedTeam.getId();
+    }
+//    admin + team leader
+    @PreAuthorizeRoleAdminTeamsTeamLeader
+    @GetMapping("/{teamId}/user/{userId}")
+    public String addUserToTeam(@PathVariable Long teamId, @PathVariable Long userId){
+        User user = userService.findById(userId);
+        Team team = teamService.findById(teamId);
+        user.setMemberOfTeam(team);
+        team.getMembers().add(user);
+        teamService.save(team);
+
+        Optional.ofNullable(team.getLeader()).ifPresent(tl -> {
+            userService.updateUserInCache(tl);
+            User loggedUser = ((ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+            if (Objects.equals(loggedUser.getId(), tl.getId())) {
+                UserDetails userDetails = applicationUserDetailsService.loadUserByUsername(tl.getUserName());
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities()));
+            }
+        });
+
+        return "redirect:/team/" + teamId;
     }
 // admin
     @PreAuthorizeRoleAdmin
