@@ -6,7 +6,9 @@ import com.bozo.issuetracker.controllers.config.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleAdmin;
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.model.Team;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.springdatajpa.TeamSDJpaService;
+import com.bozo.issuetracker.service.springdatajpa.UserSDJpaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,6 +35,9 @@ public class TeamControllerSecurityAdminTest {
 
     @MockBean
     private ApplicationUserDetailsService applicationUserDetailsService;
+
+    @MockBean
+    private UserSDJpaService userService;
 
     @WithMockUserRoleAdmin
     @Test
@@ -80,6 +85,16 @@ public class TeamControllerSecurityAdminTest {
         when(teamService.findById(anyLong())).thenReturn(team);
         when(teamService.save(any())).thenReturn(team);
         mockMvc.perform(post(Paths.TEAM_PATH.getPath() + "/{teamId}/edit", team.getId()))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUserRoleAdmin
+    @Test
+    public void addUserToTeamAdmin() throws Exception {
+        Team team = Team.builder().id(1L).build();
+        when(userService.findById(anyLong())).thenReturn(User.builder().build());
+        when(teamService.findById(anyLong())).thenReturn(team);
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/user/{userId}", team.getId(),1L))
                 .andExpect(status().is3xxRedirection());
     }
 

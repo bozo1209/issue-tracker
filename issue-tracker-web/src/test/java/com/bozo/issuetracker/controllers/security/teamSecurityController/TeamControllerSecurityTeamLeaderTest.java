@@ -6,13 +6,18 @@ import com.bozo.issuetracker.controllers.config.Paths;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleTeamLeader;
 import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUser;
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
+import com.bozo.issuetracker.details.user.ApplicationUser;
+import com.bozo.issuetracker.enums.UserRoles;
 import com.bozo.issuetracker.model.Team;
+import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.springdatajpa.TeamSDJpaService;
+import com.bozo.issuetracker.service.springdatajpa.UserSDJpaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,6 +40,9 @@ public class TeamControllerSecurityTeamLeaderTest {
 
     @MockBean
     private ApplicationUserDetailsService applicationUserDetailsService;
+
+    @MockBean
+    private UserSDJpaService userService;
 
     @WithMockUserRoleTeamLeader
     @Test
@@ -81,6 +89,30 @@ public class TeamControllerSecurityTeamLeaderTest {
                 .andExpect(status().isForbidden());
 
         verify(teamService, times(0)).save(any());
+    }
+
+    @WithUserDetails(value = "user-team_leader1", userDetailsServiceBeanName = "testUserDetailsService")
+    @Test
+    public void addUserToTeamTeamsLeader() throws Exception {
+        Team team = Team.builder().id(1L).build();
+        when(userService.findById(anyLong())).thenReturn(User.builder().build());
+        when(teamService.findById(anyLong())).thenReturn(team);
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.TEAM_LEADER).build()));
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/user/{userId}", team.getId(),1L))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @WithUserDetails(value = "user-team_leader2", userDetailsServiceBeanName = "testUserDetailsService")
+    @Test
+    public void addUserToTeamOtherLeader() throws Exception {
+        Team team = Team.builder().id(1L).build();
+        when(userService.findById(anyLong())).thenReturn(User.builder().build());
+        when(teamService.findById(anyLong())).thenReturn(team);
+        when(applicationUserDetailsService.loadUserByUsername(anyString()))
+                .thenReturn(new ApplicationUser(User.builder().role(UserRoles.TEAM_LEADER).build()));
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/user/{userId}", team.getId(),1L))
+                .andExpect(status().isForbidden());
     }
 
     @WithMockUserRoleTeamLeader
