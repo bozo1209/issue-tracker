@@ -76,8 +76,13 @@ public class TeamControllerSecurityTest {
     }
 
     @Test
-    public void addUserToTeam() throws Exception {
+    public void addUserToTeamUnauthorized() throws Exception {
         mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/user/{userId}", 1L,1L))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test void setNewTeamLeaderUnauthorized() throws Exception{
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/setleader/{userId}", 1L, 1L))
                 .andExpect(status().is3xxRedirection());
     }
 

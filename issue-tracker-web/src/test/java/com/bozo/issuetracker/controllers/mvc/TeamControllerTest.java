@@ -148,6 +148,20 @@ class TeamControllerTest {
     }
 
     @Test
+    void setNewTeamLeader() throws Exception{
+        when(userService.findById(anyLong())).thenReturn(User.builder().build());
+        when(teamService.findById(anyLong())).thenReturn(returnedTeam);
+        when(teamService.save(any())).thenReturn(Team.builder().build());
+
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/setleader/{userId}", 1L, 1L))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/team/" + returnedTeam.getId()));
+
+        verifyNoMoreInteractions(teamService);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
     void deleteTeam() throws Exception {
         when(teamService.findById(anyLong())).thenReturn(returnedTeam);
 

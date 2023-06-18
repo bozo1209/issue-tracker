@@ -96,6 +96,13 @@ public class TeamControllerSecurityUserTest {
 
     @WithMockUserRoleUser
     @Test
+    public void setNewTeamLeaderUser() throws Exception {
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/setleader/{userId}", 1L, 1L))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUserRoleUser
+    @Test
     public void deleteTeamUser() throws Exception {
         mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/1/delete"))
                 .andExpect(status().isForbidden());
