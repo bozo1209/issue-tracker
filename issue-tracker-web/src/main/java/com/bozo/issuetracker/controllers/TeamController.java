@@ -6,6 +6,7 @@ import com.bozo.issuetracker.annotation.PreAuthorizeWithAnyRole;
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.details.user.ApplicationUser;
 import com.bozo.issuetracker.enums.HTMLPaths;
+import com.bozo.issuetracker.enums.UserRoles;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.model.User;
 import com.bozo.issuetracker.service.TeamService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 
 @RequestMapping("/team")
@@ -52,10 +54,16 @@ public class TeamController {
     @PreAuthorizeWithAnyRole
     @GetMapping("/{teamId}")
     public String showTeam(@PathVariable Long teamId, Model model){
-        model.addAttribute("team", teamService.findById(teamId));
+        Team teamById = teamService.findById(teamId);
+        model.addAttribute("team", teamById);
         List<User> byMemberOfTeamIsNull = userService.findByMemberOfTeamIsNull();
         model.addAttribute("usersWithoutTeam", byMemberOfTeamIsNull);
         byMemberOfTeamIsNull.forEach(userService::updateUserInCache);
+        Optional
+                .ofNullable(teamById.getLeader())
+                .ifPresentOrElse(
+                        leader -> model.addAttribute("teamMembers", Set.of()),
+                        () -> model.addAttribute("teamMembers", teamById.getMembers()));
         return HTMLPaths.TEAM.getPath();
     }
 // admin
@@ -110,6 +118,28 @@ public class TeamController {
         teamService.save(team);
 
         Optional.ofNullable(team.getLeader()).ifPresent(tl -> {
+            userService.updateUserInCache(tl);
+            User loggedUser = ((ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+            if (Objects.equals(loggedUser.getId(), tl.getId())) {
+                UserDetails userDetails = applicationUserDetailsService.loadUserByUsername(tl.getUserName());
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities()));
+            }
+        });
+
+        return "redirect:/team/" + teamId;
+    }
+//    admin
+    @PreAuthorizeRoleAdmin
+    @GetMapping("/{teamId}/setleader/{userId}")
+    public String setNewTeamLeader(@PathVariable Long teamId, @PathVariable Long userId){
+        User user = userService.findById(userId);
+        Team team = teamService.findById(teamId);
+        user.setLeaderOfTeam(team);
+        user.setRole(UserRoles.TEAM_LEADER);
+        team.setLeader(user);
+        Team savedTeam = teamService.save(team);
+
+        Optional.ofNullable(savedTeam.getLeader()).ifPresent(tl -> {
             userService.updateUserInCache(tl);
             User loggedUser = ((ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
             if (Objects.equals(loggedUser.getId(), tl.getId())) {
