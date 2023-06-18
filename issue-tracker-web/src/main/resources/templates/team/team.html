@@ -37,6 +37,18 @@
     </table>
 </div>
 <div>
+    <h3>set team leader</h3>
+    <table>
+        <tr>
+            <th>user name</th>
+        </tr>
+        <tr th:each="user : ${teamMembers}">
+            <td th:text="${user.userName}"></td>
+            <td><a th:href="@{/team/{teamId}/setleader/{userId}(teamId=${team.id},userId=${user.id})}" th:text="'set as leader'"></a></td>
+        </tr>
+    </table>
+</div>
+<div>
     <h3>list of projects:</h3>
     <ul>
         <li th:each="project : ${team.projects}" th:text="${project?.projectName}">el</li>
