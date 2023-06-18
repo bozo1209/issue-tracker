@@ -94,7 +94,20 @@ public class TeamControllerSecurityAdminTest {
         Team team = Team.builder().id(1L).build();
         when(userService.findById(anyLong())).thenReturn(User.builder().build());
         when(teamService.findById(anyLong())).thenReturn(team);
+
         mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/user/{userId}", team.getId(),1L))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUserRoleAdmin
+    @Test
+    public void setNewTeamLeaderAdmin() throws Exception{
+        Team team = Team.builder().id(1L).build();
+        when(userService.findById(anyLong())).thenReturn(User.builder().build());
+        when(teamService.findById(anyLong())).thenReturn(team);
+        when(teamService.save(any())).thenReturn(Team.builder().build());
+
+        mockMvc.perform(get(Paths.TEAM_PATH.getPath() + "/{teamId}/setleader/{userId}", 1L, 1L))
                 .andExpect(status().is3xxRedirection());
     }
 
