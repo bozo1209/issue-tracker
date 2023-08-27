@@ -26,9 +26,12 @@
 <div>
     <h3 th:text="'number of issues: __${project.issues.size}__'"></h3>
     <h3>list of issues:</h3>
-    <ul>
-        <li th:each="issue : ${project.issues}" th:text="${issue?.description}">el</li>
-    </ul>
+    <table>
+        <tr th:each="issue : ${project.issues}">
+            <td th:text="${issue?.description}">el</td>
+            <td><a th:href="@{/issue/{id}(id=${issue.id})}" th:text="'go to issue'"></a></td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>
