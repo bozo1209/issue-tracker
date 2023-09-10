@@ -10,6 +10,13 @@
         <label>project name</label>
         <input type="text" th:field="*{projectName}">
     </div>
+    <div>
+        <label>team</label>
+        <select th:field="*{assignedTeam}">
+            <option value=" "></option>
+            <option th:each="team : ${teamList}" th:value="${team.id}" th:text="${team.teamName}"></option>
+        </select>
+    </div>
     <button type="submit" th:with="text=${project['new']} ? 'Add Project' : 'Update Project'" th:text="${text}">add</button>
 </form>
 </body>

@@ -5,6 +5,7 @@ import com.bozo.issuetracker.annotation.PreAuthorizeWithAnyRole;
 import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.service.ProjectService;
+import com.bozo.issuetracker.service.TeamService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+import java.util.Optional;
+
 @RequestMapping("/project")
 @Controller
 @PreAuthorizeRoleAdmin
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final TeamService teamService;
 // admin + team leader + user
     @PreAuthorizeWithAnyRole
     @InitBinder
@@ -45,6 +50,7 @@ public class ProjectController {
     @GetMapping("/new")
     public String addNewProject(Model model){
         model.addAttribute("project", Project.builder().build());
+        model.addAttribute("teamList", teamService.findAll());
         return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
 // admin + team leader of team that gets project
@@ -55,9 +61,7 @@ public class ProjectController {
             return HTMLPaths.ADD_EDIT_PROJECT.getPath();
         }
 
-        Project projectById = projectService.findById(1L);
-        project.setAssignedTeam(projectById.getAssignedTeam());
-        projectById.getAssignedTeam().getProjects().add(project);
+        Optional.ofNullable(project.getAssignedTeam()).ifPresent(team -> team.getProjects().add(project));
         Project savedProject = projectService.save(project);
         return "redirect:/project/" + savedProject.getId();
     }
@@ -66,6 +70,7 @@ public class ProjectController {
     @GetMapping("/{projectId}/edit")
     public String editProject(@PathVariable Long projectId, Model model){
         model.addAttribute("project", projectService.findById(projectId));
+        model.addAttribute("teamList", teamService.findAll());
         return HTMLPaths.ADD_EDIT_PROJECT.getPath();
     }
 // admin + team leader of team that gets project
@@ -75,11 +80,22 @@ public class ProjectController {
         if (result.hasErrors()){
             return HTMLPaths.ADD_EDIT_PROJECT.getPath();
         }
-        project.setId(projectId);
-        Project projectById = projectService.findById(1L);
-        project.setAssignedTeam(projectById.getAssignedTeam());
-        project.setIssues(projectById.getIssues());
-        Project savedProject = projectService.save(project);
+        Project projectById = projectService.findById(projectId);
+        projectById.setProjectName(project.getProjectName());
+
+        Optional.ofNullable(project.getAssignedTeam()).ifPresent(team -> {
+            Optional.ofNullable(projectById.getAssignedTeam()).ifPresent(assignedTeam -> {
+                if (!Objects.equals(team.getId(), assignedTeam.getId())){
+                    projectById.getAssignedTeam().getProjects().remove(projectById);
+                    team.getProjects().add(projectById);
+                }
+
+            });
+        });
+
+        projectById.setAssignedTeam(project.getAssignedTeam());
+
+        Project savedProject = projectService.save(projectById);
         return "redirect:/project/" + savedProject.getId();
     }
 // admin
