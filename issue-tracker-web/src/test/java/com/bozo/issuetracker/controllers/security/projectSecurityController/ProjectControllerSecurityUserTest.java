@@ -7,6 +7,7 @@ import com.bozo.issuetracker.controllers.security.annotation.WithMockUserRoleUse
 import com.bozo.issuetracker.details.service.ApplicationUserDetailsService;
 import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.service.springdatajpa.ProjectSDJpaService;
+import com.bozo.issuetracker.service.springdatajpa.TeamSDJpaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,6 +32,9 @@ public class ProjectControllerSecurityUserTest {
 
     @MockBean
     private ProjectSDJpaService projectService;
+
+    @MockBean
+    private TeamSDJpaService teamService;
 
     @MockBean
     private ApplicationUserDetailsService applicationUserDetailsService;

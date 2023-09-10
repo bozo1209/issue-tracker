@@ -6,6 +6,7 @@ import com.bozo.issuetracker.enums.HTMLPaths;
 import com.bozo.issuetracker.model.Project;
 import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.service.ProjectService;
+import com.bozo.issuetracker.service.TeamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,9 @@ class ProjectControllerTest {
 
     @Mock
     ProjectService projectService;
+
+    @Mock
+    TeamService teamService;
 
     @InjectMocks
     ProjectController controller;
@@ -82,7 +86,6 @@ class ProjectControllerTest {
     void processAddingProject() throws Exception {
         Project project = Project.builder().id(2L).build();
         when(projectService.save(any())).thenReturn(project);
-        when(projectService.findById(anyLong())).thenReturn(returnedProject);
 
         mockMvc.perform(post(Paths.PROJECT_PATH.getPath() + "/new"))
                 .andExpect(status().is3xxRedirection())
