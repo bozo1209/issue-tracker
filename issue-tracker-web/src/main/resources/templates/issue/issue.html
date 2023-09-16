@@ -5,6 +5,7 @@
     <title>Issue</title>
 </head>
 <body>
+<header th:insert="fragments/header.html"></header>
 <div>
     <a th:href="@{/project/__${issue.project.id}__/issue/new}" th:text="'add new'"></a>
 </div>

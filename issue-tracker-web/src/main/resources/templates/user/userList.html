@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>List of users</title>
 </head>
 <body>
+<header th:insert="fragments/header.html"></header>
 <div>
     <a th:href="@{/user/new}" th:text="add"></a>
 </div>

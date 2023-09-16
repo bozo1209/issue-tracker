@@ -5,6 +5,7 @@
     <title th:text="${team.teamName}"></title>
 </head>
 <body>
+<header th:insert="fragments/header.html"></header>
 <div>
     <a th:href="@{/team/new}" th:text="'add new'"></a>
 </div>
