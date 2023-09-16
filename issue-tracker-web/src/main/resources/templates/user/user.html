@@ -5,6 +5,7 @@
     <title th:text="${user.userName}"></title>
 </head>
 <body>
+<header th:insert="fragments/header.html"></header>
 <div>
     <a th:href="@{/user/new}" th:text="'add new'"></a>
 </div>
@@ -17,6 +18,8 @@
 <div>
     <h2 th:text="${user.userName}"></h2>
 </div>
+<h2 th:text="${user.memberOfTeam?.teamName}"></h2>
+<h2 th:text="${user.memberOfTeam?.leader?.userName}"></h2>
 <div>
     <h3>issues created</h3>
     <ul>

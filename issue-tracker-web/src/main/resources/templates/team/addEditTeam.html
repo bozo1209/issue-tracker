@@ -5,6 +5,7 @@
     <title th:with="text=${team['new']} ? 'Add Team' : 'Update Team'" th:text="${text}">Title</title>
 </head>
 <body>
+<header th:insert="fragments/header.html"></header>
 <form th:with="addorupdate=${team['new']} ? 'new' : ${team?.id} + '/edit'" th:action="@{/team/{l}(l=${addorupdate})}" th:object="${team}" method="post">
     <div>
         <label>team name</label>
