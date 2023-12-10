@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -29,10 +31,11 @@ public class ApplicationSecurityConfig {
                 auth
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated());
-        http.formLogin();
+        http.formLogin(Customizer.withDefaults());
         http.authenticationProvider(authenticationProvider());
         http.addFilterAfter(new VerifyAccessFilter(applicationUserDetailsService), UsernamePasswordAuthenticationFilter.class);
-        http.csrf().ignoringRequestMatchers(PathRequest.toH2Console()).and().headers().frameOptions().sameOrigin(); // allow opening h2-console, fo dev purpose only
+        // allow opening h2-console, for dev purpose only:
+        http.csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console())).headers(csrf -> csrf.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
     }
 
