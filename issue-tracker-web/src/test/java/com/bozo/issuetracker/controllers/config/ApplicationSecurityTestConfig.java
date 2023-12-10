@@ -6,8 +6,10 @@ import com.bozo.issuetracker.model.Team;
 import com.bozo.issuetracker.model.User;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import java.util.stream.Stream;
@@ -22,8 +24,8 @@ public class ApplicationSecurityTestConfig {
                 auth
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated());
-        http.formLogin();
-        http.csrf().disable();
+        http.formLogin(Customizer.withDefaults());
+        http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
